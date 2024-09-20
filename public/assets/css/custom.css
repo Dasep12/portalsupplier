@@ -1,0 +1,144 @@
+.sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a {
+    background: #fc6767 !important;
+    box-shadow: 4px 4px 10px 0 rgba(0,0,0,.1),4px 4px 15px -5px rgba(21,114,232,.4) !important;
+  }
+
+  .table td, .table th {
+    font-size: 12px;
+    border-top-width: 0;
+    border-bottom: 1px solid;
+    border-bottom-color: currentcolor;
+    border-color: #ebedf2 !important;
+    padding: 0 25px !important;
+    height: 20px !important;
+    vertical-align: middle !important;
+  }
+
+  .paginate_button {
+    font-size: 10px !important;
+  }
+
+.btn-custom-primary:disabled, .btn-custom-primary:focus, .btn-custom-primary:hover {
+  background: #4e9ff0 !important;
+  border-color: #4e9ff0 !important;
+}
+.btn-custom-primary {
+    padding: 5px 20px;
+    background: #2c41f2 !important;
+    border-color: #2c41f2 !important;
+}
+
+.btn-danger-custom {
+  padding: 5px 20px;
+}
+
+.btn-success-custom {
+  padding: 5px 20px;
+}
+
+
+.ui-jqgrid .ui-jqgrid-hbox {
+  float: left;
+
+  padding-right: 20px;
+
+}
+.ui-jqgrid .ui-jqgrid-hbox {
+  float: left;
+
+  padding-right: 20px;
+
+}
+*, ::after, ::before {
+  box-sizing: border-box;
+
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+  font-weight: bold;
+
+  color: #004276;
+
+}
+.ui-jqgrid .ui-jqgrid-view {
+  font-size: 13px !important;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+    border-bottom-right-radius: 3px !important;
+  }
+  .ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+    border-bottom-left-radius: 3px !important;
+  }
+  .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-top-right-radius: 3px !important;
+  }
+  .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    border-top-left-radius: 3px !important;
+  }
+
+  .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+    color: #d40000 !important;
+  }
+  .field-export:disabled, .field-export[readonly]{
+    border: 1px solid #004276 !important;
+    color: #000 !important;
+}
+
+.btn-default-custom {
+  padding: 2px 5px ;
+  background: #4363c3 !important;
+  color: #fff !important;
+}
+
+/* Add some space between Edit and Delete options */
+.popover a {
+  display: block;
+  padding: 2px 0 !important;
+}
+
+/* Customize the appearance of the popover */
+.popover {
+  max-width: 100% !important; /* Adjust width */
+}
+
+.popover-body {
+  text-align: left !important;
+}
+
+.popover-body a {
+  font-size: 11px !important;
+}
+
+.alert-custom-warning{
+  background-color: #ffad46 !important;
+  -webkit-box-shadow: 1px 1px 14px 0 rgba(255, 255, 255, 0.26) !important;
+}
+.alert-custom-warning .close {
+  background: #ffad46 !important;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  top: 12px !important;
+  border-radius: 50%;
+}
+
+.badge {
+  padding: 3px 10px !important;
+  border-radius: 3px;
+}
+
+.navbar-header[data-background-color="red2"] {
+  background: #860000 !important;
+}
+
+.logo-header[data-background-color="red2"]{
+  background: #860000 !important;
+}
+
+.sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a{
+  background: #860000 !important;
+}
+
+.modal-xlModal{
+  max-width: 97% !important;
+}
