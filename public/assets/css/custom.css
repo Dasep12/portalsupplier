@@ -142,3 +142,85 @@
 .modal-xlModal{
   max-width: 97% !important;
 }
+
+
+.card-ver {
+  /* height: 110px; */
+  height: 80px;
+  /* background: linear-gradient(0deg, rgba(221,70,172,0.7231092266007966) 0%, rgba(85,111,214,0.5970588064327293) 33%); */
+}
+
+.card-ver .card-body {
+  display: flex;
+  flex-direction: row;
+  /* color: var(--main-text-color); */
+  color: #f2f2f2;
+}
+
+.card-ver .title {
+  font-weight: 700;
+}
+
+.card-ver .img {
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card-ver img {
+  display: block;
+  max-width: 100%;
+  height: 50px  !important;
+}
+
+.card-ver .text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  padding: 0 6px;
+  margin-left: 20px;
+  margin-top: -10px;
+}
+
+.card-ver .value {
+  font-size: 2vw;
+}
+
+.detail_card_dashboard{
+  text-decoration: underline;
+}
+
+.card-ver .card-body{
+  flex: 1 1 auto !important;
+  padding: 0.5rem !important;
+}
+
+.margin-top-card-custom  {
+  margin-top: -20px !important;
+}
+
+.margin-left-card-custom  {
+  margin-left: -3px !important;
+}
+
+.card-ver3 {
+  width: 210px !important;
+}
+
+
+.counting {
+  transition: all 0.5s ease; /* Smooth transition for text and style */
+}
+
+/* Add transition effects when changing value */
+.changing {
+  opacity: 0; /* Fade out */
+}
+
+.changed {
+  color: rgb(42, 12, 12); /* Change color when value changes */
+  opacity: 1; /* Fade in */
+}

@@ -32,7 +32,7 @@
          </li>
          <li class="nav-item">
            <a data-toggle="collapse" href="#base">
-             <i class="fas fa-layer-group"></i>
+             <i class="fas fa-cubes"></i>
              <p>Master Data</p>
              <span class="caret"></span>
            </a>
@@ -56,6 +56,27 @@
                <li>
                  <a href="{{ url('part') }}">
                    <span class="sub-item">Part Material</span>
+                 </a>
+               </li>
+             </ul>
+           </div>
+         </li>
+         <li class="nav-item">
+           <a data-toggle="collapse" href="#proc">
+             <i class="fas fa-layer-group"></i>
+             <p>Procurement</p>
+             <span class="caret"></span>
+           </a>
+           <div class="collapse" id="proc">
+             <ul class="nav nav-collapse">
+               <li>
+                 <a href="{{ url('supplier') }}">
+                   <span class="sub-item">Entry Safe Stock</span>
+                 </a>
+               </li>
+               <li>
+                 <a href="{{ url('supplier') }}">
+                   <span class="sub-item">Monitor Stock</span>
                  </a>
                </li>
              </ul>
