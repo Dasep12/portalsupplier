@@ -64,13 +64,13 @@
          <li class="nav-item">
            <a data-toggle="collapse" href="#proc">
              <i class="fas fa-layer-group"></i>
-             <p>Procurement</p>
+             <p>Stock</p>
              <span class="caret"></span>
            </a>
            <div class="collapse" id="proc">
              <ul class="nav nav-collapse">
                <li>
-                 <a href="{{ url('supplier') }}">
+                 <a href="{{ url('entrystock') }}">
                    <span class="sub-item">Entry Safe Stock</span>
                  </a>
                </li>

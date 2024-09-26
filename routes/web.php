@@ -6,6 +6,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\DenyController;
+use App\Http\Controllers\EntryStockController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\UnitsController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,14 @@ Route::get('/jsonListPackage', [PartController::class, 'jsonListPackage']);
 Route::get('/jsonListUnits', [PartController::class, 'jsonListUnits']);
 Route::post('/loadPart', [PartController::class, 'loadPart']);
 Route::post('/uploadPart', [PartController::class, 'uploadPart']);
+
+
+
+// Entry Stock
+Route::get('/entrystock', [EntryStockController::class, 'index']);
+Route::post('/uploadFiles', [EntryStockController::class, 'uploadFiles'])->name('excel.upload.post');
+Route::get('/progressUpload', [EntryStockController::class, 'progressUpload'])->name('excel.upload.progress');
+Route::get('/upload-result', [EntryStockController::class, 'showResult'])->name('excel.upload.result');
 
 // Route::middleware('check.sessionLogin')->prefix('/')->group(function () {
 //     Route::get('/', [AuthController::class, 'index']);

@@ -164,10 +164,12 @@
         }, {
             label: 'Part Name',
             name: 'part_name',
+            align: 'center'
             // width: 80,
         }, {
             label: 'Part Number',
             name: 'part_number',
+            align: 'center'
             // width: 80,
         }, {
             label: 'Package',
@@ -393,9 +395,9 @@
         $("#id").val(id);
         setTimeout(() => {
             $("#unit_id").val(unit_id).trigger('change');
-            $("#supplier_id").val(supplier_id).trigger('change');
             $("#category_id").val(category_id).trigger('change');
             setTimeout(() => {
+                $("#supplier_id").val(supplier_id).trigger('change');
                 $("#units_id").val(units_id).trigger('change');
             }, 400);
         }, 400);

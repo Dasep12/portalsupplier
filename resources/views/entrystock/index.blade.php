@@ -1,0 +1,243 @@
+@extends('layouts.master')
+
+@section('content')
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title">Stock</h4>
+                <span class="breadcrumbs">
+                </span>
+                Entry Safety Stock
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="card" style="height: 500px;">
+                            <div class="card-body">
+                                <div class="row mb-1">
+                                    <div class="col-md-8">
+                                        <button type="button" onclick="CrudUnit('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Upload Stock</button>
+
+                                    </div>
+                                    <div class="col-md-4 d-flex justify-content-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary btn-custom-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fa fa-filter"></span> Filter
+                                            </button>
+                                            <form id="form-filter" class="mr-5 dropdown-menu p-4 bg-light" style="width:320px">
+                                                <h6>Filter Safety Stock</h6>
+                                                <div class="form-group form-group-sm">
+                                                    <div class="input-group input-group-sm">
+                                                        <select id="supplier_id" name="supplier_id" style="font-size: 0.85rem !important;" class="form-control form-control-sm custom-select select2">
+                                                            <option value="*">*All Supplier</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-sm">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" placeholder="Search Part Name" class="form-control form-control-sm" name="part_name" id="part_name">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group form-group-sm">
+                                                    <div class="input-group input-group-sm">
+                                                        <input id="date_upload" name="date_upload" type="date" class="form-control date" placeholder="End Date">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-sm">
+                                                    <div class="input-group input-group-sm">
+                                                        <button type="button" id="exportBtn" class="btn btn-dark"><span class="fa fa-search"></span> Search</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="jqGrid"></table>
+                                    <div id="jqGridPager"></div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-lg-3 mt-2">
+                                        <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+        var dataTemp = [];
+
+        function reloadGridList() {
+            $("#jqGrid").jqGrid('setGridParam', {
+                datatype: 'json',
+                mtype: 'GET',
+                postData: {
+                    search: $("#searchInput").val()
+                }
+            }).trigger('reloadGrid');
+        }
+
+        function reloadgridItem(data) {
+            // Clear existing data
+            $("#JqGridTempUpload").jqGrid('clearGridData', true);
+            $("#JqGridTempUpload").jqGrid('setGridParam', {
+                data: data
+            });
+            // Refresh the grid
+            $("#JqGridTempUpload").trigger('reloadGrid');
+        }
+
+
+        $("#jqGrid").jqGrid({
+            url: "{{ url('jsonUnitsList') }}",
+            datatype: "json",
+            mtype: "GET",
+            postData: {
+                "_token": "{{ csrf_token() }}",
+            },
+            colModel: [{
+                label: 'Units',
+                name: 'name_unit',
+                // width: 75
+            }, {
+                label: 'Units',
+                name: 'parent_id',
+                hidden: true
+                // width: 75
+            }, {
+                label: 'Units Code',
+                name: 'code_unit',
+                // width: 90
+            }, {
+                label: "Remarks",
+                name: "remarks",
+            }, {
+                label: "Date",
+                name: "created_at",
+                formatter: "date",
+                formatoptions: {
+                    srcformat: "ISO8601Long",
+                    newformat: "d M Y H:i:s"
+                },
+            }, {
+                label: 'status',
+                name: 'status_unit',
+                hidden: true
+                // width: 80,
+            }, {
+                label: 'status',
+                name: 'act',
+                align: 'center',
+                formatter: function(cellvalue, options, rowObject) {
+                    var status = rowObject.status_unit == 1 ? 'Active' : 'Inactive';
+                    var badge = rowObject.status_unit == true ? 'badge-success' : 'badge-danger';
+                    return `<span class="badge ${badge}">${status}</span>`;
+                },
+                // width: 80,
+            }],
+            viewrecords: true,
+            rowNum: 15,
+            rownumbers: true,
+            rownumWidth: 30,
+            width: '100%',
+            height: 300,
+            autoresizeOnLoad: true,
+            autowidth: true,
+            pager: "#jqGridPager",
+            rowList: [15, 30, 50],
+            jsonReader: {
+                repeatitems: false,
+                root: "rows",
+                page: "page",
+                total: "total",
+                records: "records"
+            },
+            loadComplete: function(data) {
+                $(window).on('resize', function() {
+                    var gridWidth = $('.table-responsive').width(); // Get the width of the container
+                    $('#jqGrid').setGridWidth(gridWidth - 5); // Adjust the grid width
+                }).trigger('resize'); // Trigger resize on page load
+
+            },
+        });
+
+
+
+
+
+        function CrudUnit(act, id) {
+            document.getElementById("CrudEntryStockFormUpload").reset();
+            $('#ErrorInfoUpload').html('');
+            $("#CrudActionStockUpload").val(act);
+            $("#CrudEntryStockFormUpload").find("label.error").remove(); // Remove any error labels
+            $("#CrudEntryStockFormUpload").find(".error").removeClass("error"); // Remove error class from inputs
+
+            switch (act) {
+                case 'create':
+                    $(".modal-title").html(`<i class="fas fa-plus-square"></i> Upload Safety Stock`)
+                    $("#CrudEntryStockModalUpload").modal('show');
+                    break;
+            }
+        }
+
+
+
+        function doSuccess(data, action) {
+            switch (action) {
+                case "create":
+                    showToast(data, action, "has been saved succesfully")
+                    reloadGridList();
+                    break;
+                case "update":
+                    showToast(data, action, "has been saved succesfully")
+                    reloadGridList();
+                    break;
+                case "delete":
+                    showToast(data, action, " has been removed succesfully")
+                    reloadGridList();
+                    break;
+            }
+        }
+
+
+
+        function jsonListSupplier() {
+            $.ajax({
+                url: "{{ url('jsonListSupplier') }}",
+                method: "GET",
+                cache: false,
+                success: function(data) {
+                    // Clear the current options
+                    $('#supplier_id').empty();
+                    // $('#supplier_id').append('<option value="">Choose</option>');
+                    // Loop through the data and append options
+                    $.each(data, function(index, item) {
+
+                        if (item.id == 2) {
+                            $('#supplier_id').append($('<option>', {
+                                value: item.id, // assuming 'id' is the value to be sent
+                                text: item.supplier_name // assuming 'name' is the display text
+                            }));
+                            return false;
+                        }
+                    });
+                }
+            })
+        }
+
+        jsonListSupplier()
+    </script>
+    @include('entrystock.partials.CrudStockUpload')
+    @endsection
