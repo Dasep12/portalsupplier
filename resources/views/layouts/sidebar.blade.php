@@ -75,7 +75,7 @@
                  </a>
                </li>
                <li>
-                 <a href="{{ url('supplier') }}">
+                 <a href="{{ url('monitorStock') }}">
                    <span class="sub-item">Monitor Stock</span>
                  </a>
                </li>

@@ -217,16 +217,13 @@
             },
             width: 80,
         }],
-        viewrecords: true, // show the current page, data rang and total records on the toolbar
-        rowNum: 15,
-        loadonce: false,
-        rownumbers: true,
-        rownumWidth: 30,
-        width: '100%',
+        viewrecords: true,
+        width: 780,
         height: 300,
-        autoresizeOnLoad: true,
+        rowNum: 20,
         autowidth: true,
-        shrinkToFit: false,
+        loadonce: false,
+        rowNum: 20,
         pager: "#jqGridPager",
         rowList: [15, 30, 50],
         jsonReader: {
@@ -399,8 +396,8 @@
             setTimeout(() => {
                 $("#supplier_id").val(supplier_id).trigger('change');
                 $("#units_id").val(units_id).trigger('change');
-            }, 400);
-        }, 400);
+            }, 900);
+        }, 700);
         $("#model").val(model)
         $("#uniq").val(uniq)
         $("#part_name").val(part_name)

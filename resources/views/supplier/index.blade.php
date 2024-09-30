@@ -19,7 +19,7 @@
                                 <div class="col-md-8">
                                     <button type="button" onclick="CrudSupplier('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
                                     <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
-                                    <button class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+                                    <button onclick="CrudSupplier('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-icon">
@@ -62,6 +62,8 @@
 
 @include('supplier.partials.CrudSupplier')
 <script>
+    var dataTemp = [];
+
     function reloadGridList() {
         $("#jqGrid").jqGrid('setGridParam', {
             datatype: 'json',
@@ -70,6 +72,16 @@
                 search: $("#searchInput").val()
             }
         }).trigger('reloadGrid');
+    }
+
+    function reloadgridItem(data) {
+        // Clear existing data
+        $("#JqGridTempUpload").jqGrid('clearGridData', true);
+        $("#JqGridTempUpload").jqGrid('setGridParam', {
+            data: data
+        });
+        // Refresh the grid
+        $("#JqGridTempUpload").trigger('reloadGrid');
     }
     $(document).ready(function() {
         // Attach click event handler to the search icon
@@ -205,6 +217,7 @@
         document.getElementById("CrudSupplierForm").reset();
         $('#ErrorInfo').html('');
         $("#CrudActionSupplier").val(act);
+        $("#CrudActionSupplierUpload").val(act);
         $("#CrudSupplierForm").find("label.error").remove(); // Remove any error labels
         $("#CrudSupplierForm").find(".error").removeClass("error"); // Remove error class from inputs
 
@@ -226,6 +239,10 @@
                 getDataValues(id);
                 $(".modal-title").html(`<i class="fas fa-plus-square"></i> Edit Supplier`)
                 $("#CrudSupplierModal").modal('show');
+                break;
+            case 'upload':
+                $("#CrudSupplierUploadModalLabel").html(`<i class="fas fa-plus-square"></i> Upload Supplier`)
+                $("#CrudSupplierUploadModalUpload").modal('show');
                 break;
         }
     }
@@ -331,4 +348,6 @@
 
     }
 </script>
+
+@include('supplier.partials.CrudSupplierUpload')
 @endsection

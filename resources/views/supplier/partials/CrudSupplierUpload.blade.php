@@ -1,9 +1,9 @@
 <!-- Modal -->
-<div class="modal fade" id="CrudEntryStockModalUpload" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="CrudEntryStockModalLabel" aria-hidden="true">
+<div class="modal fade" id="CrudSupplierUploadModalUpload" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="CrudSupplierUploadModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xlModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="CrudEntryStockModalLabel"><i class="fas fa-plus-square"></i> Add Part</h5>
+        <h5 class="modal-title" id="CrudSupplierUploadModalLabel"><i class="fas fa-plus-square"></i> Add Part</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -12,17 +12,9 @@
       <div class="modal-body">
         <div class="row mb-0">
           <div class="col-md-7">
-            <form action="{{ url('uploadFiles') }}" enctype="multipart/form-data" method="post" id="CrudEntryStockFormUpload">
+            <form action="{{ url('uploadFilesSupplier') }}" enctype="multipart/form-data" method="post" id="CrudSupplierUploadFormUpload">
               @csrf
               <div class="row">
-                <div class="col-lg-4">
-                  <div class="form-group form-group-sm">
-                    <label for="">Supplier Name</label>
-                    <select id="suppliers_id" name="suppliers_id" style="font-size: 0.85rem !important;" class="form-control form-control-sm custom-select select2">
-                      <option value="*">*All Supplier</option>
-                    </select>
-                  </div>
-                </div>
                 <div class="col-lg-3">
                   <div class="form-group form-group-sm">
                     <label for="">File Upload</label>
@@ -32,10 +24,7 @@
                     </div>
                   </div>
                 </div>
-
-
               </div>
-
             </form>
           </div>
         </div>
@@ -47,19 +36,19 @@
             </div>
           </div>
         </div>
-        <form action="#" enctype="multipart/form-data" method="post" id="CrudEntryStockForm2">
+        <form action="#" enctype="multipart/form-data" method="post" id="CrudSupplierUploadFormUpload2">
           @csrf
           <div class="row">
             <div class="col md-12">
               <div class="table-responsive">
                 <table id="JqGridTempUpload"></table>
                 <div id="jqGridPager2"></div>
-                <a href="" class="mt-2 btn btn-primary btn-success-custom"><i class="fa fa-file-excel"></i> Download Template</a>
+                <a href="" class="mt-2 mb-3 btn btn-primary btn-success-custom"><i class="fa fa-file-excel"></i> Download Template</a>
               </div>
             </div>
           </div>
           <div class="row mt-1" id="ErrorInfoUpload"></div>
-          <input type="text" hidden name="CrudActionStockUpload" id="CrudActionStockUpload">
+          <input type="text" hidden name="CrudActionSupplierUpload" id="CrudActionSupplierUpload">
       </div>
 
       <div class="modal-footer">
@@ -77,26 +66,25 @@
     datatype: "local",
     data: [],
     colModel: [{
-      label: 'Date Upload',
-      name: 'date_upload',
-      width: 75
+      label: 'Supplier Code',
+      name: 'supplier_id',
+      // width: 75
     }, {
       label: 'Supplier',
       name: 'supplier_name',
-      width: 75
+      // width: 75
     }, {
-      label: 'Part Number',
-      name: 'part_number',
-      width: 80,
+      label: 'Phone',
+      name: 'phone',
+      // width: 80,
     }, {
-      label: 'Part Name',
-      name: 'part_name',
-      width: 80,
+      label: 'Email',
+      name: 'email',
+      // width: 80,
     }, {
-      label: 'Safety Stock',
-      name: 'qty_safety',
-      width: 120,
-      align: 'center'
+      label: 'Address',
+      name: 'address',
+      // width: 80,
     }],
     loadonce: false,
     viewrecords: true,
@@ -111,7 +99,7 @@
     pager: "#jqGridPager2",
     loadComplete: function(data) {
       var modalWidth = $('.table-responsive').width(); // Get the modal width
-      $("#JqGridTempUpload").setGridWidth(modalWidth * 1.128); // Set jqGrid width (95% of modal width)
+      $("#JqGridTempUpload").setGridWidth(modalWidth * 1.09); // Set jqGrid width (95% of modal width)
     },
   });
 
@@ -126,11 +114,11 @@
     if ($(this).val()) {
       $('.progress').hide();
       // If file is selected, submit the form
-      $('#CrudEntryStockFormUpload').submit();
+      $('#CrudSupplierUploadFormUpload').submit();
     }
   });
 
-  $('#CrudEntryStockFormUpload').on('submit', function(e) {
+  $('#CrudSupplierUploadFormUpload').on('submit', function(e) {
     e.preventDefault(); // Prevent the default form submission
     var formData = new FormData(this);
     $.ajax({
@@ -172,11 +160,11 @@
           var resp = response.data;
           for (let r = 0; r < resp.length; r++) {
             var params = {
-              'date_upload': resp[r].date_upload,
+              'supplier_id': resp[r].supplier_id,
               'supplier_name': resp[r].supplier_name,
-              'part_name': resp[r].part_name,
-              'part_number': resp[r].part_number,
-              'qty_safety': resp[r].qty_safety,
+              'phone': resp[r].phone,
+              'email': resp[r].email,
+              'address': resp[r].address,
             };
             if (partExists(resp[r].part_number)) {
               // console.log("data has been exist " + resp[r].uniq)
@@ -220,25 +208,25 @@
     });
   });
 
-  $("#CrudEntryStockForm2").validate({
+  $("#CrudSupplierUploadFormUpload2").validate({
     ignore: ":hidden",
     submitHandler: function(form) {
       var allData = $("#JqGridTempUpload").jqGrid('getRowData');
       $.ajax({
-        url: "{{ url('jsonImportStock') }}",
+        url: "{{ url('jsonCrudSupplier') }}",
         method: 'POST',
         cache: false,
         data: {
           "_token": "{{ csrf_token() }}",
-          supplier_id: $("#suppliers_id").val(),
+          "CrudActionSupplier": $("#CrudActionSupplierUpload").val(),
           allData: allData,
         },
         success: function(response) {
           if (response.success) {
             reloadGridList()
             reloadgridItem(dataTemp)
-            $("#CrudEntryStockModalUpload").modal('hide');
-            doSuccess('stock', $("#CrudActionStockUpload").val())
+            $("#CrudSupplierUploadModalUpload").modal('hide');
+            doSuccess('supplier', "create")
           }
         },
         error: function(xhr, desc, err) {

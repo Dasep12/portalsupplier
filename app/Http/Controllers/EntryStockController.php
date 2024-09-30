@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EntryStockDaily;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Part;
 use App\Models\Supplier;
+use App\Models\UpdateStock;
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Illuminate\Support\Facades\Session;
 
 class EntryStockController extends Controller
 {
@@ -18,9 +19,9 @@ class EntryStockController extends Controller
         return view("entrystock.index");
     }
 
-    public function jsonPartList(Request $req)
+    public function jsonStockList(Request $req)
     {
-        $data = Part::jsonList($req);
+        $data = EntryStockDaily::jsonList($req);
         return response()->json($data);
     }
 
@@ -94,7 +95,7 @@ class EntryStockController extends Controller
             ]);
 
             $file = $request->file('excel_file');
-            $filePath = $file->getRealPath();
+            $filePath = $file->getPathname();
 
             // Start processing the file
             $spreadsheet = IOFactory::load($filePath);
@@ -123,9 +124,9 @@ class EntryStockController extends Controller
 
 
                 $res = [
-                    'date_upload'     => date('Y-m-d'),
+                    'date_upload'     => date('d M Y'),
                     'supplier_name'   => $row['A'],
-                    'part_no'         => $row['B'],
+                    'part_number'     => $row['B'],
                     'part_name'       => $row['C'],
                     'qty_safety'      => $row['D'],
                 ];
@@ -142,6 +143,65 @@ class EntryStockController extends Controller
                 'message' => $e->getMessage(),
                 'data' => []
             ], 500);
+        }
+    }
+
+
+    public function jsonImportStock(Request $req)
+    {
+        $sendData = $req->allData;
+        $data = [];
+        foreach ($sendData as $s) {
+            // cek part 
+            $partName = Part::where('part_number', $s['part_number'])->get()->first();
+            $par = [
+                'supplier_id'       => $req->supplier_id,
+                'part_id'           => $partName->id,
+                'qty_safetyStock'   => $s['qty_safety'],
+                'created_at'        => date('Y-m-d H:i:s'),
+                'date_upload'       => date("Y-m-d", strtotime($s['date_upload'])),
+                'created_by'        => 1
+            ];
+
+            $par2 = [
+                'supplier_id'       => $req->supplier_id,
+                'part_id'           => $partName->id,
+                'stock'             => $s['qty_safety'],
+                'created_at'        => date('Y-m-d H:i:s'),
+                'date_update'       => date("Y-m-d", strtotime($s['date_upload'])),
+                'created_by'        => 1
+            ];
+            $count = EntryStockDaily::where(['part_id' => $partName->id, 'date_upload' => date("Y-m-d", strtotime($s['date_upload']))]);
+            if ($count->count() > 0) {
+                $update = $count->get()->first();
+                $update->qty_safetyStock = $s['qty_safety'];
+                $update->updated_at = date('Y-m-d H:i:s');
+                $update->updated_by = 1;
+                $update->save();
+            } else {
+                EntryStockDaily::insert($par);
+            }
+
+
+            $cekStock = UpdateStock::where(['part_id' => $partName->id]);
+            if ($cekStock->count() > 0) {
+                $update = $cekStock->get()->first();
+                $update->stock = $s['qty_safety'];
+                $update->updated_at = date('Y-m-d H:i:s');
+                $update->updated_by = 1;
+                $update->save();
+            } else {
+                UpdateStock::insert($par2);
+            }
+        }
+
+        DB::beginTransaction();
+        try {
+            DB::commit();
+            return response()->json(['success' => true, 'msg' => 'success upload stock']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'msg' => $e->getMessage()], 500);
         }
     }
 

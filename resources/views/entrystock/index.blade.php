@@ -18,7 +18,7 @@
                             <div class="card-body">
                                 <div class="row mb-1">
                                     <div class="col-md-8">
-                                        <button type="button" onclick="CrudUnit('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Upload Stock</button>
+                                        <button type="button" onclick="CrudUnit('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Upload Stock</button>
 
                                     </div>
                                     <div class="col-md-4 d-flex justify-content-end">
@@ -31,7 +31,7 @@
                                                 <div class="form-group form-group-sm">
                                                     <div class="input-group input-group-sm">
                                                         <select id="supplier_id" name="supplier_id" style="font-size: 0.85rem !important;" class="form-control form-control-sm custom-select select2">
-                                                            <option value="*">*All Supplier</option>
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -43,12 +43,12 @@
 
                                                 <div class="form-group form-group-sm">
                                                     <div class="input-group input-group-sm">
-                                                        <input id="date_upload" name="date_upload" type="date" class="form-control date" placeholder="End Date">
+                                                        <input id="date_upload" name="date_upload" value="<?= date('Y-m-d') ?>" type="date" class="form-control date" placeholder="End Date">
                                                     </div>
                                                 </div>
                                                 <div class="form-group form-group-sm">
                                                     <div class="input-group input-group-sm">
-                                                        <button type="button" id="exportBtn" class="btn btn-dark"><span class="fa fa-search"></span> Search</button>
+                                                        <button type="button" id="filterBtn" class="btn btn-dark btn-sm"><span class="fa fa-search"></span> Search</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -79,12 +79,42 @@
     <script>
         var dataTemp = [];
 
+        function jsonListSupplier() {
+            $.ajax({
+                url: "{{ url('jsonListSupplier') }}",
+                method: "GET",
+                cache: false,
+                success: function(data) {
+                    // Clear the current options
+                    $('#supplier_id').empty();
+                    $('#suppliers_id').empty();
+                    // $('#supplier_id').append('<option value="">Choose</option>');
+                    // Loop through the data and append options
+                    $.each(data, function(index, item) {
+                        $('#supplier_id').append($('<option>', {
+                            value: item.id, // assuming 'id' is the value to be sent
+                            text: item.supplier_name // assuming 'name' is the display text
+                        }));
+                        $('#suppliers_id').append($('<option>', {
+                            value: item.id, // assuming 'id' is the value to be sent
+                            text: item.supplier_name // assuming 'name' is the display text
+                        }));
+                    });
+                }
+            })
+        }
+
+        jsonListSupplier()
+
         function reloadGridList() {
             $("#jqGrid").jqGrid('setGridParam', {
                 datatype: 'json',
                 mtype: 'GET',
                 postData: {
-                    search: $("#searchInput").val()
+                    search: $("#searchInput").val(),
+                    date_stock: $("#date_upload").val(),
+                    supplier_id: $("#supplier_id").val(),
+                    part_name: $("#part_name").val()
                 }
             }).trigger('reloadGrid');
         }
@@ -100,52 +130,45 @@
         }
 
 
+
         $("#jqGrid").jqGrid({
-            url: "{{ url('jsonUnitsList') }}",
+            url: "{{ url('jsonStockList') }}",
             datatype: "json",
             mtype: "GET",
             postData: {
                 "_token": "{{ csrf_token() }}",
+                date_stock: $("#date_upload").val(),
+                supplier_id: $("#supplier_id").val()
             },
             colModel: [{
-                label: 'Units',
-                name: 'name_unit',
+                label: 'Supplier Name',
+                name: 'supplier_name',
                 // width: 75
             }, {
-                label: 'Units',
-                name: 'parent_id',
-                hidden: true
+                label: 'Part Name',
+                name: 'part_name',
                 // width: 75
             }, {
-                label: 'Units Code',
-                name: 'code_unit',
+                label: 'Part Number',
+                name: 'part_number',
                 // width: 90
             }, {
-                label: "Remarks",
-                name: "remarks",
+                label: "Qty Safety Stock",
+                name: "safetyStock",
+                align: 'center',
+                formatter: function(value, option, row) {
+                    var color = value == 'not set' ? 'text-danger' : ''
+                    return `<span class="${color} fw-bold">${value}</span>`
+                }
             }, {
                 label: "Date",
-                name: "created_at",
-                formatter: "date",
-                formatoptions: {
-                    srcformat: "ISO8601Long",
-                    newformat: "d M Y H:i:s"
-                },
-            }, {
-                label: 'status',
-                name: 'status_unit',
-                hidden: true
-                // width: 80,
-            }, {
-                label: 'status',
-                name: 'act',
-                align: 'center',
-                formatter: function(cellvalue, options, rowObject) {
-                    var status = rowObject.status_unit == 1 ? 'Active' : 'Inactive';
-                    var badge = rowObject.status_unit == true ? 'badge-success' : 'badge-danger';
-                    return `<span class="badge ${badge}">${status}</span>`;
-                },
-                // width: 80,
+                name: "date_stock",
+                align: 'center'
+                // formatter: "date",
+                // formatoptions: {
+                //     srcformat: "ISO8601Long",
+                //     newformat: "d M Y"
+                // },
             }],
             viewrecords: true,
             rowNum: 15,
@@ -177,15 +200,20 @@
 
 
 
+
+
         function CrudUnit(act, id) {
             document.getElementById("CrudEntryStockFormUpload").reset();
             $('#ErrorInfoUpload').html('');
             $("#CrudActionStockUpload").val(act);
             $("#CrudEntryStockFormUpload").find("label.error").remove(); // Remove any error labels
             $("#CrudEntryStockFormUpload").find(".error").removeClass("error"); // Remove error class from inputs
-
+            dataTemp = [];
+            reloadgridItem(dataTemp)
+            $('.progress').hide();
             switch (act) {
-                case 'create':
+                case 'upload':
+                    $(".btn-upload-file").attr("disabled", true)
                     $(".modal-title").html(`<i class="fas fa-plus-square"></i> Upload Safety Stock`)
                     $("#CrudEntryStockModalUpload").modal('show');
                     break;
@@ -196,7 +224,7 @@
 
         function doSuccess(data, action) {
             switch (action) {
-                case "create":
+                case "upload":
                     showToast(data, action, "has been saved succesfully")
                     reloadGridList();
                     break;
@@ -213,31 +241,11 @@
 
 
 
-        function jsonListSupplier() {
-            $.ajax({
-                url: "{{ url('jsonListSupplier') }}",
-                method: "GET",
-                cache: false,
-                success: function(data) {
-                    // Clear the current options
-                    $('#supplier_id').empty();
-                    // $('#supplier_id').append('<option value="">Choose</option>');
-                    // Loop through the data and append options
-                    $.each(data, function(index, item) {
 
-                        if (item.id == 2) {
-                            $('#supplier_id').append($('<option>', {
-                                value: item.id, // assuming 'id' is the value to be sent
-                                text: item.supplier_name // assuming 'name' is the display text
-                            }));
-                            return false;
-                        }
-                    });
-                }
-            })
-        }
 
-        jsonListSupplier()
+        $("#filterBtn").click(function() {
+            reloadGridList()
+        })
     </script>
     @include('entrystock.partials.CrudStockUpload')
     @endsection
