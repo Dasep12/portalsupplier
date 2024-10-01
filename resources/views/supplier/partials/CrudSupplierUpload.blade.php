@@ -105,7 +105,7 @@
 
   function partExists(idx) {
     return dataTemp.some(function(el) {
-      return el.part_number == idx;
+      return el.supplier_id == idx;
     });
   }
 
@@ -166,7 +166,7 @@
               'email': resp[r].email,
               'address': resp[r].address,
             };
-            if (partExists(resp[r].part_number)) {
+            if (partExists(resp[r].supplier_id)) {
               // console.log("data has been exist " + resp[r].uniq)
             } else {
               dataTemp.push(params);
@@ -208,10 +208,11 @@
     });
   });
 
-  $("#CrudSupplierUploadFormUpload2").validate({
-    ignore: ":hidden",
-    submitHandler: function(form) {
-      var allData = $("#JqGridTempUpload").jqGrid('getRowData');
+  $("#CrudSupplierUploadFormUpload2").submit(function(e) {
+
+    e.preventDefault();
+    var allData = $("#JqGridTempUpload").jqGrid('getRowData');
+    if (allData.length > 0) {
       $.ajax({
         url: "{{ url('jsonCrudSupplier') }}",
         method: 'POST',
@@ -227,6 +228,7 @@
             reloadgridItem(dataTemp)
             $("#CrudSupplierUploadModalUpload").modal('hide');
             doSuccess('supplier', "create")
+            $('.progress').hide();
           }
         },
         error: function(xhr, desc, err) {
@@ -242,7 +244,8 @@
           $('#ErrorInfoUpload').html(errMsg);
         },
       });
-      return false;
+    } else {
+      showToast('file empty', "upload", ",check file again")
     }
   })
 </script>

@@ -33,18 +33,26 @@ class EntryStockDaily extends Model
         $sidx = $req->input('sidx', 'id');
         $sord = $req->input('sord', 'asc');
         $start = ($page - 1) * $limit;
-
         // Total count of records
         $qry = "SELECT COUNT(1) AS count from tbl_mst_part a
                 left join tbl_mst_supplier b on b.id = a.supplier_id
                 left outer join (
                 select  date_upload , coalesce(qty_safetyStock,0)qty_safetyStock , part_id  from tbl_trn_stockUploadDaily
                 where date_upload = '" . $req->date_stock . "'
-                )X on X.part_id = a.id
-                WHERE a.supplier_id = '" . $req->supplier_id . "' ";
-        if ($req->part_name) {
-            $qry .= " AND a.part_name LIKE '%$req->part_name%' ";
+                )X on X.part_id = a.id ";
+
+        if ($req->supplier_id != null || $req->supplier_id != "") {
+            $qry .= " WHERE a.supplier_id = '$req->supplier_id' ";
+            if ($req->part_name) {
+                $qry .= " AND a.part_name LIKE '%$req->part_name%' ";
+            }
+        } else {
+            $qry .= " WHERE a.supplier_id is not null ";
+            if ($req->part_name) {
+                $qry .= " WHERE a.part_name LIKE '%$req->part_name%' ";
+            }
         }
+
         $countResult = DB::select($qry);
         $count = $countResult[0]->count;
 
@@ -63,10 +71,17 @@ class EntryStockDaily extends Model
                 left outer join (
                     select  date_upload , qty_safetyStock , part_id  from tbl_trn_stockUploadDaily
                     where date_upload = '" . $req->date_stock . "'
-                )X on X.part_id = a.id 
-                WHERE a.supplier_id = '" . $req->supplier_id . "' ";
-        if ($req->part_name) {
-            $query .= " AND a.part_name LIKE '%$req->part_name%' ";
+                )X on X.part_id = a.id  ";
+        if ($req->supplier_id != null || $req->supplier_id != "") {
+            $query .= " WHERE a.supplier_id = '$req->supplier_id' ";
+            if ($req->part_name) {
+                $query .= " AND a.part_name LIKE '%$req->part_name%' ";
+            }
+        } else {
+            $query .= " WHERE a.supplier_id is not null ";
+            if ($req->part_name) {
+                $query .= " AND a.part_name LIKE '%$req->part_name%' ";
+            }
         }
         $data = DB::select($query);
 

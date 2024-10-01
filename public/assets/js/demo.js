@@ -14,6 +14,7 @@ function showToast(data,act ,msg) {
        time: 400,
        delay:800,
        allow_dismiss: true, 
+       z_index: 9999,
         animate: {
             enter: 'animated fadeInDown',
             exit: 'animated fadeOutUp'

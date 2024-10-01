@@ -16,12 +16,14 @@
                     <div class="card" style="height: 500px;">
                         <div class="card-body">
                             <div class="row mb-1">
-                                <div class="col-md-8">
+                                <div class="col-md-9">
                                     <button type="button" onclick="CrudPart('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
                                     <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
                                     <button type="button" onclick="CrudPart('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+
+
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="input-icon">
                                         <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search for part name ...">
                                         <span id="searchButton" style="cursor: pointer;" class="input-icon-addon">
@@ -41,13 +43,17 @@
                                         <div class="input-group-append">
                                             <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
                                             <div class="dropdown-menu">
-                                                <a onclick="exportToExcel()" class="dropdown-item" href="#"><i class="fa fa-file-excel"></i> Excel</a>
-                                                <a class="dropdown-item" href="#"><i class="fa fa-file-pdf"></i> Pdf</a>
+                                                <a style="cursor:pointer" onclick="exportToExcel('xls')" class="dropdown-item"><i class="fa fa-file-excel"></i> Excel</a>
+                                                <a style="cursor:pointer" onclick="exportToExcel('pdf')" class="dropdown-item"><i class="fa fa-file-pdf"></i> Pdf</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-3 mt-2">
+                                    <button type="button" style="display: none;" class="btn btn-outline-danger btn-danger-custom" id="getSelectedIdxDelete"><i class="fa fa-trash"></i> Delete</button>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -80,6 +86,27 @@
                 search: $("#searchInput").val()
             }
         }).trigger('reloadGrid');
+    }
+
+    function doSuccess(data, action) {
+        switch (action) {
+            case "create":
+                showToast(data, action, "has been saved succesfully")
+                reloadGridList();
+                break;
+            case "update":
+                showToast(data, action, "has been saved succesfully")
+                reloadGridList();
+                break;
+            case "delete":
+                showToast(data, action, " has been removed succesfully")
+                reloadGridList();
+                break;
+            case "upload":
+                showToast(data, action, " has been succesfully")
+                reloadGridList();
+                break;
+        }
     }
     $(document).ready(function() {
         // Attach click event handler to the search icon
@@ -225,6 +252,7 @@
         loadonce: false,
         rowNum: 20,
         pager: "#jqGridPager",
+        multiselect: true,
         rowList: [15, 30, 50],
         jsonReader: {
             repeatitems: false,
@@ -264,6 +292,64 @@
             numberOfColumns: 3,
             titleText: 'Detail'
         }]
+    });
+
+    // Delete Multiple
+    $('#jqGrid').on('jqGridSelectRow jqGridSelectAll', function() {
+        var selectedRows = $("#jqGrid").jqGrid('getGridParam', 'selarrrow');
+        if (selectedRows.length > 0) {
+            document.getElementById("getSelectedIdxDelete").style.display = "block";
+
+            $("#getSelectedIdxDelete").off('click').on('click', function() {
+                $.confirm({
+                    title: 'Notice!',
+                    content: 'Delete Part ?',
+                    buttons: {
+                        yes: {
+                            btnClass: 'btn-danger',
+                            action: function() {
+                                $.ajax({
+                                    url: "{{ url('jsonMultiDeletePart') }}",
+                                    method: "GET",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        "id": selectedRows
+                                    },
+                                    success: function(res) {
+                                        if (res.success) {
+                                            reloadGridList();
+                                            document.getElementById("getSelectedIdxDelete").style.display = "none";
+                                            showToast("part", 'delete', " has been successfully")
+                                        } else {
+                                            // doSuccess(res.msg, )
+                                            showToast("part", 'delete', res.msg)
+                                        }
+                                    },
+                                    error: function(xhr, desc, err) {
+                                        var respText = "";
+                                        try {
+                                            respText = eval(xhr.responseText);
+                                        } catch {
+                                            respText = xhr.responseText;
+                                        }
+                                        respText = unescape(respText).replaceAll("_n_", "<br/>")
+                                        var errMsg = ' Error ' + xhr.status + '!</b><br/>' + respText + '</small>'
+                                        doSuccess('delete', errMsg, 'error')
+                                    },
+                                })
+                            }
+                        },
+                        no: {
+                            btnClass: 'btn-blue',
+                            action: function() {}
+                        },
+                    }
+                });
+            })
+
+        } else {
+            document.getElementById("getSelectedIdxDelete").style.display = "none";
+        }
     });
 
     function actionFormatter(cellvalue, options, rowObject) {
@@ -323,6 +409,7 @@
             case 'upload':
                 dataTemp = [];
                 reloadgridItem(dataTemp)
+                $('.progress').hide();
                 $(".btn-upload-file").attr("disabled", true)
                 $("#excel_file").val('')
                 document.getElementById("CrudActionPartUpload").value = act;
@@ -349,26 +436,7 @@
         });
     }
 
-    function doSuccess(data, action) {
-        switch (action) {
-            case "create":
-                showToast(data, action, "has been saved succesfully")
-                reloadGridList();
-                break;
-            case "update":
-                showToast(data, action, "has been saved succesfully")
-                reloadGridList();
-                break;
-            case "delete":
-                showToast(data, action, " has been removed succesfully")
-                reloadGridList();
-                break;
-            case "upload":
-                showToast(data, action, " has been succesfully")
-                reloadGridList();
-                break;
-        }
-    }
+
 
     function getDataValues(id) {
         var Grid = $('#jqGrid'),
@@ -543,8 +611,44 @@
         }
     });
 
-    function exportToExcel() {
+    function exportToExcel(type) {
+        $.ajax({
+            url: "{{ url('exportPart') }}",
+            method: "GET",
+            data: {
+                act: type
+            },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function(data, status, xhr) {
 
+                if (type == "xls") {
+                    // Create a URL for the Blob object and initiate download
+                    var blob = new Blob([data], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "Part.xlsx";
+                    link.click();
+                } else if (type == "pdf") {
+                    var blob = new Blob([data], {
+                        type: 'application/pdf'
+                    });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "Part.pdf";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error exporting file:', error);
+            }
+        })
     }
 </script>
 

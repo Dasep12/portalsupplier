@@ -9,7 +9,7 @@
                 <h4 class="page-title">Stock</h4>
                 <span class="breadcrumbs">
                 </span>
-                Entry Safety Stock
+                Upload Safety Stock
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -18,7 +18,7 @@
                             <div class="card-body">
                                 <div class="row mb-1">
                                     <div class="col-md-8">
-                                        <button type="button" onclick="CrudUnit('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Upload Stock</button>
+                                        <!-- kosong dulu -->
 
                                     </div>
                                     <div class="col-md-4 d-flex justify-content-end">
@@ -31,7 +31,6 @@
                                                 <div class="form-group form-group-sm">
                                                     <div class="input-group input-group-sm">
                                                         <select id="supplier_id" name="supplier_id" style="font-size: 0.85rem !important;" class="form-control form-control-sm custom-select select2">
-
                                                         </select>
                                                     </div>
                                                 </div>
@@ -60,8 +59,12 @@
                                     <div id="jqGridPager"></div>
                                 </div>
                                 <div class="row mb-1">
-                                    <div class="col-lg-3 mt-2">
+                                    <div class="col-lg-12 mt-2">
+                                        <button type="button" onclick="CrudUnit('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload Stock</button>
+
                                         <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -71,10 +74,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
     <script>
         var dataTemp = [];
@@ -88,7 +87,8 @@
                     // Clear the current options
                     $('#supplier_id').empty();
                     $('#suppliers_id').empty();
-                    // $('#supplier_id').append('<option value="">Choose</option>');
+                    $('#supplier_id').append('<option value="">All Supplier</option>');
+                    $('#suppliers_id').append('<option value="">All Supplier</option>');
                     // Loop through the data and append options
                     $.each(data, function(index, item) {
                         $('#supplier_id').append($('<option>', {
@@ -128,7 +128,6 @@
             // Refresh the grid
             $("#JqGridTempUpload").trigger('reloadGrid');
         }
-
 
 
         $("#jqGrid").jqGrid({
@@ -197,11 +196,6 @@
         });
 
 
-
-
-
-
-
         function CrudUnit(act, id) {
             document.getElementById("CrudEntryStockFormUpload").reset();
             $('#ErrorInfoUpload').html('');
@@ -220,8 +214,6 @@
             }
         }
 
-
-
         function doSuccess(data, action) {
             switch (action) {
                 case "upload":
@@ -238,9 +230,6 @@
                     break;
             }
         }
-
-
-
 
 
         $("#filterBtn").click(function() {

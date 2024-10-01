@@ -15,14 +15,21 @@
             @csrf
             <div class="col md-3">
               <div class="form-group ">
-                <label for="excel_file" class="placeholder">Upload file</label>
-                <input id="excel_file" name="excel_file" type="file" class="form-control-file" required>
-              </div>
-              <div class="form-group ">
-                <button type="submit" class="btn btn-submit btn-warning btn-success-custom"><i class="fas fa-upload"></i> Upload</button>
+                <label for="">File Upload</label>
+                <div id="btn-upload" style="position: relative;overflow: hidden;cursor:pointer" class="btn btn-dark btn-sm btn-block">
+                  <i class="fa fa-upload"></i> Select File
+                  <input style="cursor:pointer" id="excel_file" name="excel_file" type="file" class="form-control-file" required>
+                </div>
               </div>
             </div>
           </form>
+        </div>
+        <div class="row mb-2 mt-1">
+          <div class="col-lg-12 mb-1">
+            <div class="progress" style="height: 35px; display: none;">
+              <div id="errorText" class="progress-bar progress-bar-animated" role="progressbar" style="width: 0%;"></div>
+            </div>
+          </div>
         </div>
         <form action="#" enctype="multipart/form-data" method="post" id="CrudPartForm2">
           @csrf
@@ -147,6 +154,15 @@
   });
 
 
+  // Trigger form submission when a file is selected
+  $('#excel_file').on('change', function() {
+    if ($(this).val()) {
+      $('.progress').hide();
+      // If file is selected, submit the form
+      $('#CrudPartFormUpload').submit();
+    }
+  });
+
 
   $("#CrudPartFormUpload").validate({
     ignore: ":hidden",
@@ -157,8 +173,33 @@
         data: new FormData(form),
         contentType: false,
         processData: false,
+        beforeSend: function() {
+          dataTemp = [];
+          // Show the progress bar and reset its state
+          $('.progress').show();
+          $('.progress-bar').css('width', '0%').addClass('progress-bar-animated');
+        },
+        xhr: function() {
+          var xhr = new window.XMLHttpRequest();
+          xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+              var percentComplete = Math.round((e.loaded / e.total) * 100);
+              // Update progress bar
+              $('.progress-bar').css('width', percentComplete + '%');
+              $('.progress-bar').html('Uploading');
+              $('.progress-bar').attr('aria-valuenow', percentComplete);
+            }
+          }, false);
+
+          return xhr;
+        },
         success: function(response) {
           $("#excel_file").val('');
+          $('.progress-bar').css('width', '100%');
+          $("#file-upload").val('');
+          $("#errorText").removeClass('bg-danger');
+          $("#errorText").addClass('bg-success');
+          $('.progress-bar').html('<h5 class="mt-1"><i class="fa fa-check"></i> Upload Success</h5>');
           dataTemp = [];
           if (response.success) {
             var resp = response.data;

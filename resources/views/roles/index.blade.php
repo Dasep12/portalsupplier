@@ -6,20 +6,19 @@
     <div class="content">
         <div class="page-inner">
             <div class="page-header">
-                <h4 class="page-title">Master Data</h4>
+                <h4 class="page-title">Tools</h4>
                 <span class="breadcrumbs">
                 </span>
-                Supplier
+                Roles
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card" style="height: 500px;">
+                    <div class="card">
                         <div class="card-body">
                             <div class="row mb-1">
                                 <div class="col-md-8">
-                                    <button type="button" onclick="CrudSupplier('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
+                                    <button type="button" onclick="CrudRoles('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
                                     <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
-                                    <button onclick="CrudSupplier('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-icon">
@@ -60,7 +59,7 @@
 
 
 
-@include('supplier.partials.CrudSupplier')
+@include('roles.partials.CrudRoles')
 <script>
     var dataTemp = [];
 
@@ -74,14 +73,14 @@
         }).trigger('reloadGrid');
     }
 
-    function reloadgridItem(data) {
-        // Clear existing data
-        $("#JqGridTempUpload").jqGrid('clearGridData', true);
-        $("#JqGridTempUpload").jqGrid('setGridParam', {
-            data: data
-        });
-        // Refresh the grid
-        $("#JqGridTempUpload").trigger('reloadGrid');
+    function ReloadModalMenu(idRole) {
+        $("#jqGridMainModal").jqGrid('setGridParam', {
+            datatype: 'json',
+            mtype: 'GET',
+            postData: {
+                id_role: idRole,
+            }
+        }).trigger('reloadGrid');
     }
     $(document).ready(function() {
         // Attach click event handler to the search icon
@@ -101,7 +100,7 @@
     });
 
     $("#jqGrid").jqGrid({
-        url: "{{ url('jsonSupplierList') }}",
+        url: "{{ url('jsonRole') }}",
         datatype: "json",
         mtype: "GET",
         postData: {
@@ -115,28 +114,20 @@
             width: 40,
             formatter: actionFormatter
         }, {
-            label: 'Code Supplier',
-            name: 'supplier_id',
+            label: 'Role Id',
+            name: 'code_role',
             // width: 75
         }, {
-            label: 'Supplier Name',
-            name: 'supplier_name',
+            label: 'Role Name',
+            name: 'roleName',
             // width: 90
         }, {
-            label: 'Phone',
-            name: 'phone',
-            // width: 100
-        }, {
-            label: 'Email',
-            name: 'email',
-            // width: 80,
-        }, {
-            label: 'Address',
-            name: 'address',
+            label: 'Access',
+            name: 'Accessed',
             // width: 80,
         }, {
             label: 'status',
-            name: 'status_supplier',
+            name: 'status_role',
             hidden: true
             // width: 80,
         }, {
@@ -144,8 +135,8 @@
             name: 'act',
             align: 'center',
             formatter: function(cellvalue, options, rowObject) {
-                var status = rowObject.status_supplier == 1 ? 'Active' : 'Inactive';
-                var badge = rowObject.status_supplier == true ? 'badge-success' : 'badge-danger';
+                var status = rowObject.status_role == 1 ? 'Active' : 'Inactive';
+                var badge = rowObject.status_role == true ? 'badge-success' : 'badge-danger';
                 return `<span class="badge ${badge}">${status}</span>`;
             },
             width: 80,
@@ -156,18 +147,11 @@
         rownumbers: true,
         rownumWidth: 30,
         width: '100%',
-        height: 300,
+        height: 350,
         autoresizeOnLoad: true,
         autowidth: true,
         pager: "#jqGridPager",
         rowList: [15, 30, 50],
-        jsonReader: {
-            repeatitems: false,
-            root: "rows",
-            page: "page",
-            total: "total",
-            records: "records"
-        },
         loadComplete: function(data) {
             $('[data-toggle="popover"]').popover(); // Initialize the popover
             // Adjust grid width on window resize to make it responsive
@@ -210,48 +194,47 @@
 
     $(document).on('click', '.btn-option', function() {
         var crud_data = (this.id).split('-');
-        CrudSupplier(crud_data[1], "" + crud_data[2] + "");
+        CrudRoles(crud_data[1], "" + crud_data[2] + "");
     });
 
-    function CrudSupplier(act, id) {
-        document.getElementById("CrudSupplierForm").reset();
+    function CrudRoles(act, id) {
+        document.getElementById("CrudRolesForm").reset();
         $('#ErrorInfo').html('');
-        $("#CrudActionSupplier").val(act);
-        $("#CrudActionSupplierUpload").val(act);
-        $("#CrudSupplierForm").find("label.error").remove(); // Remove any error labels
-        $("#CrudSupplierForm").find(".error").removeClass("error"); // Remove error class from inputs
+        $("#CrudRolesAction").val(act);
+
+        $("#CrudRolesForm").find("label.error").remove(); // Remove any error labels
+        $("#CrudRolesForm").find(".error").removeClass("error"); // Remove error class from inputs
 
         switch (act) {
             case 'create':
                 disabledEnableForm(false)
-                $("#status_supplier").attr("checked", true)
-                $(".modal-title").html(`<i class="fas fa-plus-square"></i> Add Supplier`)
-                $("#CrudSupplierModal").modal('show');
+                ReloadModalMenu(id)
+                $("#status_role").attr("checked", true)
+                $(".modal-title").html(`<i class="fas fa-plus-square"></i> Add Role`)
+                $("#modalCrudRoles").modal('show');
+                $(".btn-submit-menu").attr("disabled", true)
                 break;
             case 'delete':
                 disabledEnableForm(true);
                 getDataValues(id);
-                $(".modal-title").html(`<i class="fas fa-window-close"></i> Delete Supplier`)
-                $("#CrudSupplierModal").modal('show');
+                ReloadModalMenu(id)
+                $(".modal-title").html(`<i class="fas fa-window-close"></i> Delete Role`)
+                $("#modalCrudRoles").modal('show');
+                $(".btn-submit-menu").attr("disabled", false)
                 break;
             case 'update':
                 disabledEnableForm(false);
                 getDataValues(id);
-                $(".modal-title").html(`<i class="fas fa-plus-square"></i> Edit Supplier`)
-                $("#CrudSupplierModal").modal('show');
-                break;
-            case 'upload':
-                $("#CrudSupplierUploadModalLabel").html(`<i class="fas fa-plus-square"></i> Upload Supplier`)
-                $('.progress').hide();
-                dataTemp = [];
-                reloadgridItem(dataTemp);
-                $("#CrudSupplierUploadModalUpload").modal('show');
+                ReloadModalMenu(id)
+                $(".modal-title").html(`<i class="fas fa-plus-square"></i> Edit Role`)
+                $("#modalCrudRoles").modal('show');
+                $(".btn-submit-menu").attr("disabled", true)
                 break;
         }
     }
 
     function disabledEnableForm(act) {
-        $("#CrudSupplierForm :input").each(function() {
+        $("#CrudRolesForm :input").each(function() {
             var typeOfObject = $(this).prop('tagName');
             switch (typeOfObject) {
                 case "SELECT":
@@ -287,33 +270,27 @@
     function getDataValues(id) {
         var Grid = $('#jqGrid'),
             selRowId = Grid.jqGrid('getGridParam', 'selrow'),
-            supplier_id = Grid.jqGrid('getCell', id, 'supplier_id'),
-            supplier_name = Grid.jqGrid('getCell', id, 'supplier_name'),
-            address = Grid.jqGrid('getCell', id, 'address'),
-            phone = Grid.jqGrid('getCell', id, 'phone'),
-            email = Grid.jqGrid('getCell', id, 'email'),
-            status_supplier = Grid.jqGrid('getCell', id, 'status_supplier');
+            code_role = Grid.jqGrid('getCell', id, 'code_role'),
+            roleName = Grid.jqGrid('getCell', id, 'roleName'),
+            status_role = Grid.jqGrid('getCell', id, 'status_role');
 
         $("#id").val(id)
-        $("#supplier_id").val(supplier_id)
-        $("#supplier_name").val(supplier_name)
-        $("#phone").val(phone)
-        $("#email").val(email)
-        $("#address").val(address)
+        $("#code_role").val(code_role)
+        $("#roleName").val(roleName)
 
         var stat = true;
-        status_supplier == 1 ? stat = true : stat = false;
-        $("#status_supplier").attr("checked", stat)
+        status_role == 1 ? stat = true : stat = false;
+        $("#status_role").attr("checked", stat)
     }
 
 
 
-    $("#CrudSupplierForm").validate({
+    $("#CrudRolesForm").validate({
         ignore: ":hidden",
         submitHandler: function(form) {
             $.ajax({
                 type: "POST",
-                url: "{{ url('jsonCrudSupplier') }}",
+                url: "{{ url('jsonCrudRoles') }}",
                 beforeSend: function() {
                     $(".btn-submit").attr("disabled", true);
                 },
@@ -323,8 +300,8 @@
                 data: $(form).serialize(),
                 success: function(res) {
                     if (res.success) {
-                        $("#CrudSupplierModal").modal('hide');
-                        doSuccess(res.data, $("#CrudActionSupplier").val())
+                        $("#modalCrudRoles").modal('hide');
+                        doSuccess(res.data, $("#CrudRolesAction").val())
                     } else {
                         var errMsg = '<div class="col-md-12"><div class="alert alert-custom-warning alert-warning alert-dismissible fade show" role="alert"><small><b> Error !</b><br/>' + res.msg + '</small><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button></div></div>'
                         $('#ErrorInfo').html(errMsg);
@@ -388,5 +365,4 @@
     }
 </script>
 
-@include('supplier.partials.CrudSupplierUpload')
 @endsection

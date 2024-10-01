@@ -35,16 +35,7 @@
                             </div>
                             <div class="row mb-1">
                                 <div class="col-lg-3 mt-2">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" readonly value="Export Data" class="form-control field-export" aria-label="Text input with dropdown button">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
-                                            <div class="dropdown-menu">
-                                                <a onclick="exportToExcel()" class="dropdown-item" href="#"><i class="fa fa-file-excel"></i> Excel</a>
-                                                <a class="dropdown-item" href="#"><i class="fa fa-file-pdf"></i> Pdf</a>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

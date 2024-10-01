@@ -11,6 +11,8 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MonitorStockController;
 use App\Http\Controllers\UnitsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RolesController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,6 +32,7 @@ Route::get('/supplier', [SupplierController::class, 'index']);
 Route::get('/jsonSupplierList', [SupplierController::class, 'jsonSupplierList']);
 Route::post('/jsonCrudSupplier', [SupplierController::class, 'jsonCrudSupplier']);
 Route::post('/uploadFilesSupplier', [SupplierController::class, 'uploadFilesSupplier']);
+Route::get('/exportSupplier', [SupplierController::class, 'exportSupplier']);
 
 
 // UNITS ROUTES
@@ -50,12 +53,14 @@ Route::post('/jsonCrudCategory', [CategoryController::class, 'jsonCrudCategory']
 Route::get('/part', [PartController::class, 'index']);
 Route::get('/jsonPartList', [PartController::class, 'jsonPartList']);
 Route::post('/jsonCrudPart', [PartController::class, 'jsonCrudPart']);
+Route::get('/jsonMultiDeletePart', [PartController::class, 'jsonMultiDeletePart']);
 Route::get('/jsonListSupplier', [PartController::class, 'jsonListSupplier']);
 Route::get('/jsonListCategory', [PartController::class, 'jsonListCategory']);
 Route::get('/jsonListPackage', [PartController::class, 'jsonListPackage']);
 Route::get('/jsonListUnits', [PartController::class, 'jsonListUnits']);
 Route::post('/loadPart', [PartController::class, 'loadPart']);
 Route::post('/uploadPart', [PartController::class, 'uploadPart']);
+Route::get('/exportPart', [PartController::class, 'exportPart']);
 
 
 
@@ -69,6 +74,13 @@ Route::post('/jsonImportStock', [EntryStockController::class, 'jsonImportStock']
 // Monitor Stock
 Route::get('/monitorStock', [MonitorStockController::class, 'index']);
 Route::get('/jsonMonitorList', [MonitorStockController::class, 'jsonMonitorList']);
+
+
+// Roles 
+Route::get('/roles', [RolesController::class, 'index']);
+Route::get('/jsonRole', [RolesController::class, 'jsonRole']);
+Route::get('/jsonDetailListMenu', [RolesController::class, 'jsonDetailListMenu']);
+Route::post('/jsonCrudRoles', [RolesController::class, 'jsonCrudRoles']);
 
 // Route::middleware('check.sessionLogin')->prefix('/')->group(function () {
 //     Route::get('/', [AuthController::class, 'index']);

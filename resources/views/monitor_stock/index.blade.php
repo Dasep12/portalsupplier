@@ -17,7 +17,7 @@
                         <div class="card-body">
                             <div class="row mb-1">
                                 <div class="col-md-8">
-                                    <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
+
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-icon">
@@ -33,18 +33,25 @@
                                 <div id="jqGridPager"></div>
                             </div>
                             <div class="row mb-1">
-                                <div class="col-lg-3 mt-2">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" readonly value="Export Data" class="form-control field-export" aria-label="Text input with dropdown button">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
-                                            <div class="dropdown-menu">
-                                                <a onclick="exportToExcel()" class="dropdown-item" href="#"><i class="fa fa-file-excel"></i> Excel</a>
-                                                <a class="dropdown-item" href="#"><i class="fa fa-file-pdf"></i> Pdf</a>
+                                <div class="form-group ml-1">
+                                    <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group ml-1">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" readonly value="Export Data" class="form-control field-export" aria-label="Text input with dropdown button">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
+                                                <div class="dropdown-menu">
+                                                    <a onclick="exportToExcel()" class="dropdown-item" href="#"><i class="fa fa-file-excel"></i> Excel</a>
+                                                    <a class="dropdown-item" href="#"><i class="fa fa-file-pdf"></i> Pdf</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -52,6 +59,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
@@ -100,7 +108,7 @@
         }, {
             label: 'Part Name',
             name: 'part_name',
-            // width: 140
+            width: 200
         }, {
             label: 'Unit',
             name: 'code_unit',
@@ -117,7 +125,7 @@
             align: 'center',
             // width: 95
         }, {
-            label: 'Days',
+            label: 'Day',
             name: 'safetyForDays',
             align: 'center',
             // width: 95
@@ -143,6 +151,16 @@
                 return `<span class="fw-bold text-uppercase ${color}">${value}</span>`
             }
             // width: 95
+        }, {
+            label: 'Updated',
+            name: 'last_update',
+            formatter: "date",
+            formatoptions: {
+                srcformat: "ISO8601Long",
+                newformat: "d M Y H:i"
+            },
+            align: 'center',
+            width: 170
         }, {
             label: 'Status',
             name: 'stockStatus',

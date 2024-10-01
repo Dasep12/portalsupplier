@@ -10,6 +10,13 @@ use App\Models\Supplier;
 use App\Models\Units;
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
 
 class PartController extends Controller
 {
@@ -24,6 +31,8 @@ class PartController extends Controller
         $data = Part::jsonList($req);
         return response()->json($data);
     }
+
+
 
     public function jsonCrudPart(Request $req)
     {
@@ -86,6 +95,24 @@ class PartController extends Controller
         }
     }
 
+    public function jsonMultiDeletePart(Request $req)
+    {
+        DB::beginTransaction();
+        try {
+            $stock = DB::table('tbl_trn_stock')->whereIn('part_id', $req->id);
+            if ($stock->count() > 0) {
+                return response()->json(['msg' => 'not sucess,part has been transaction']);
+            } else {
+                DB::table('tbl_mst_part')->whereIn('id', $req->id)->delete();
+                DB::commit();
+                return response()->json(['success' => true, 'msg' => 'Berhasil Delete']);
+            }
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'msg' => $e->getMessage()]);
+        }
+    }
+
     public function jsonListSupplier(Request $req)
     {
         $data = Supplier::where('status_supplier', 1)->get();
@@ -117,9 +144,6 @@ class PartController extends Controller
         $request->validate([
             'excel_file' => 'required|file|mimes:xls,xlsx',
         ]);
-
-
-
 
         $file = $request->file('excel_file');
         $spreadsheet = IOFactory::load($file->getPathname());
@@ -241,6 +265,122 @@ class PartController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return back()->withErrors(['success' => false, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function exportPart(Request $req)
+    {
+
+        $data = DB::table('vw_part')
+            ->select('*')
+            ->get();
+        // Create a new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+
+        // Set some data in the spreadsheet
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Supplier Name');
+        $sheet->setCellValue('C1', 'Model');
+        $sheet->setCellValue('D1', 'Uniq');
+        $sheet->setCellValue('E1', 'Part Number');
+        $sheet->setCellValue('F1', 'Part Name');
+        $sheet->setCellValue('G1', 'Unit');
+        $sheet->setCellValue('H1', 'Qty/Unit');
+        $sheet->setCellValue('I1', 'Volume/Days');
+        $sheet->setCellValue('J1', 'Category');
+        $sheet->setCellValue('K1', 'Remarks');
+
+        // Apply borders to a single cell
+        $styleArray = [
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+                'inside' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+            ],
+        ];
+        // Set background color for a range of cells
+        $sheet->getStyle('A1:K1')->applyFromArray([
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'f8fc03'], // Magenta background
+            ],
+            'font' => [
+                'bold' => true,
+            ],
+        ]);
+
+        // Example: Freeze the first row
+        $sheet->freezePane('A2');
+        // Auto size columns based on the content
+        $this->autoSizeColumns($sheet, range('A', 'K'));
+
+        $start = 2;
+        $no = 1;
+
+        if (count($data) > 0) {
+            foreach ($data as $d) {
+                $sheet->setCellValue('A' . $start, $no++);
+                $sheet->setCellValue('B' . $start, $d->supplier_name);
+                $sheet->setCellValue('C' . $start, $d->model);
+                $sheet->setCellValue('D' . $start, ucwords(strtoupper($d->uniq)));
+                $sheet->setCellValue('E' . $start, ucwords(strtoupper($d->part_number)));
+                $sheet->setCellValue('F' . $start, ucwords(strtoupper($d->part_name)));
+                $sheet->setCellValue('G' . $start, ucwords(strtoupper($d->code_units)));
+                $sheet->setCellValue('H' . $start, ucwords(strtoupper($d->qtyPerUnit)));
+                $sheet->setCellValue('I' . $start, ucwords(strtoupper($d->volumePerDays)));
+                $sheet->setCellValue('J' . $start, ucwords(strtoupper($d->name_category)));
+                $sheet->setCellValue('K' . $start, ucwords(strtoupper($d->remarks)));
+                $start++;
+            }
+        } else {
+            $sheet->setCellValue('A' . $start, "data not found");
+            $sheet->mergeCells('A' . $start . ':K' . $start + 1);
+        }
+
+        $sheet->getStyle('A1:K' . $start)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:K' . $start)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A1:K' . $start - 1)->applyFromArray($styleArray);
+        $sheet->getStyle('A1:K' . $start)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+
+        if ($req->act == "xls") {
+            // Save the spreadsheet to a file
+            $writer = new Xlsx($spreadsheet);
+            $tempFile = tempnam(sys_get_temp_dir(), 'php');
+            $writer->save($tempFile);
+
+            // Return the file as a response
+            return response()->download($tempFile, 'export.xlsx')->deleteFileAfterSend(true);
+        } else if ($req->act == "pdf") {
+            // Write the file to a stream
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf($spreadsheet);
+            $writer = new Mpdf($spreadsheet);
+
+            // Return the file as a response
+            return response()->stream(
+                function () use ($writer) {
+                    $writer->save('php://output');
+                },
+                200,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="export.pdf"',
+                ]
+            );
+        }
+    }
+
+    private function autoSizeColumns($sheet, array $columns)
+    {
+        foreach ($columns as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
     }
 }
