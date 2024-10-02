@@ -35,7 +35,7 @@
                             </div>
 
                             <div class="form-group">
-                                <input type="checkbox" value="" id="status_role" name="status_role" class="checkeds" checked="checked" /> <label for="status_role"> Status *</label>
+                                <input type="checkbox" id="status_role" name="status_role" class="checkeds" /> <label for="status_role"> Status *</label>
                             </div>
                         </div>
                         <div class="col-md-8">

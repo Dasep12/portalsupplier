@@ -12,6 +12,7 @@ use App\Http\Controllers\MonitorStockController;
 use App\Http\Controllers\UnitsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,13 @@ Route::get('/jsonRole', [RolesController::class, 'jsonRole']);
 Route::get('/jsonDetailListMenu', [RolesController::class, 'jsonDetailListMenu']);
 Route::post('/jsonCrudRoles', [RolesController::class, 'jsonCrudRoles']);
 
+
+// Users 
+Route::get('/users', [UsersController::class, 'index']);
+Route::get('/jsonUsers', [UsersController::class, 'jsonUsers']);
+Route::post('/jsonCrudUser', [UsersController::class, 'jsonCrudUser']);
+Route::get('/jsonListRoles', [UsersController::class, 'jsonListRoles']);
+Route::get('/jsonDetailListUserMenu', [UsersController::class, 'jsonDetailListUserMenu']);
 // Route::middleware('check.sessionLogin')->prefix('/')->group(function () {
 //     Route::get('/', [AuthController::class, 'index']);
 // });

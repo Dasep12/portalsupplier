@@ -40,7 +40,7 @@ class RolesController extends Controller
             "roleName"       => $req->roleName,
             "code_role"      => $req->code_role,
             'created_by'     => 1,
-            'status_role'    => $req->status_role != null ? 1 : 0
+            'status_role'    => isset($req->status_role) ? 1 : 0
         ];
         switch (strtolower($act)) {
             case "create":
@@ -64,9 +64,8 @@ class RolesController extends Controller
                 $roles = Roles::find($req->id);
                 $roles->code_role = $req->code_role;
                 $roles->roleName = $req->roleName;
-                $roles->status_role = $req->status_role != null ? 1 : 0;
+                $roles->status_role = isset($req->status_role) ? 1 : 0;
                 $roles->updated_by = 1;
-
                 $existingMenus = DB::table('tbl_sys_roleaccessmenu')
                     ->where('role_id', $req->id)
                     ->pluck('menu_id') // Get existing menu IDs for the role
@@ -81,8 +80,8 @@ class RolesController extends Controller
                             ->where('menu_id', $menuId)
                             ->update([
                                 'enable_menu' => 1,
-                                'updated_by' => 1, // Assuming you have an updated_by column
-                                'updated_at' => now(), // Assuming you have a timestamp column for updates
+                                'updated_by' => 1,
+                                'updated_at' => now(),
                             ]);
                     } else {
                         // Insert new menu item

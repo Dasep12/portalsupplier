@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 use Modules\Administrator\App\Models\Customers;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Encryption\Encrypter;
 
 function getSuratJalanNumber($idCustomers)
 {
@@ -86,5 +88,26 @@ function CrudMenuPermission($MenuUrl, $UserId, $act)
         } else {
             return null;
         }
+    }
+}
+
+
+function passwordCrypt($type, $pass)
+{
+    // Compress before encryption
+    $compressedData = gzcompress($pass);
+
+    // Encrypt compressed data
+    $encryptedData = Crypt::encrypt($compressedData);
+
+    // Decrypt and decompress
+    $decryptedData = Crypt::decrypt($encryptedData);
+    $originalData = gzuncompress($decryptedData);
+
+
+    if ($type == "encrypt") {
+        return $decryptedData;
+    } else {
+        return $originalData;
     }
 }
