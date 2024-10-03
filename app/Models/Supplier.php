@@ -29,64 +29,29 @@ class Supplier extends Model
     ];
     public static function jsonList($req)
     {
-        $page = $req->input('page');
-        $limit = $req->input('rows');
-        $sidx = $req->input('sidx', 'id');
-        $sord = $req->input('sord', 'asc');
-        $start = ($page - 1) * $limit;
+        $page = $req->input('page'); // current page number
+        $limit = $req->input('rows'); // rows per page
+        $sidx = $req->input('sidx'); // sort column
+        $sord = $req->input('sord'); // sort direction
 
-        // Total count of records
-        $qry = "SELECT COUNT(1) AS count from tbl_mst_supplier";
+        $query = DB::table('tbl_mst_supplier as a')
+            ->select('a.*');
+
         if ($req->search) {
-            $qry .= " WHERE supplier_name LIKE '%$req->search%' ";
-        }
-        $countResult = DB::select($qry);
-        $count = $countResult[0]->count;
-
-        // Total pages calculation
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
-        } else {
-            $total_pages = 0;
+            $query->where('a.supplier_name', 'like', '%' . $req->search . '%');
         }
 
-        // Fetch data using DB::raw
-        $query = "SELECT *  from tbl_mst_supplier ";
-        if ($req->search) {
-            $query .= " WHERE supplier_name LIKE '%$req->search%' ";
-        }
-        $query .= " ORDER BY  id  DESC  LIMIT  $start , $limit ";
-        $data = DB::select($query);
-
-        // Prepare rows for jqGrid
-        $rows = [];
-        foreach ($data as $item) {
-            $rows[] = [
-                'id'                => $item->id,
-                'supplier_id'       => $item->supplier_id,
-                'supplier_name'     => $item->supplier_name,
-                'status_supplier'   => $item->status_supplier,
-                'phone'             => $item->phone,
-                'email'             => $item->email,
-                'address'           => $item->address,
-                'created_at'        => $item->created_at,
-                'created_by'        => $item->created_by,
-                'updated_at'        => $item->updated_at,
-                'updated_by'        => $item->updated_by,
-                'cell' => [
-                    $item->id,
-                ] // Adjust fields as needed
-            ];
-        }
-
+        $count = $query->count();
+        $data = $query->skip(($page - 1) * $limit)
+            ->take($limit)
+            ->get();
+        $totalPages = ($count > 0) ? ceil($count / $limit) : 0;
         $response = [
-            'page' => $page,
-            'total' => $total_pages,
-            'records' => $count,
-            'rows' => $rows
+            'page'      => $page,
+            'total'     => $totalPages,
+            'records'   => $count,
+            'rows'      => $data->toArray(),
         ];
         return $response;
     }
-
-    
 }

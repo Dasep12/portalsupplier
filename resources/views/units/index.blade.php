@@ -13,11 +13,14 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
                     <div class="card" style="height: 500px;">
                         <div class="card-body">
                             <div class="row mb-1">
                                 <div class="col-md-8">
+                                    @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
                                     <button type="button" onclick="CrudUnit('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
+                                    @endif
                                     <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
                                 </div>
                                 <div class="col-md-4">
@@ -40,6 +43,18 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                    <div class="card" style="height: 500px;">
+                        <div class="card-body card-body d-flex justify-content-center align-items-center">
+                            <div class="row">
+                                <h1 class="fw-bold">Oops ! </h1><br>
+                                <h1> Sorry,module can't be access</h1>
+                            </div>
+                            <div class="row">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -278,8 +293,16 @@
 
     function showButton(RowId, id, GridTable) {
         var dataContent = "<div>";
-        dataContent += "<a id='btn-update-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-success ml-2 btn-option' ><small><span class='fas fa-edit'></span> Edit</small></a>";
-        dataContent += "<a  id='btn-delete-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-danger ml-2 btn-option ' ><small><span class='fas fa-trash'></span> Delete</small></a>";
+        <?php if (CrudMenuPermission($MenuUrl, $user_id, 'edit')) { ?>
+            dataContent += "<a id='btn-update-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-success ml-2 btn-option' ><small><span class='fas fa-edit'></span> Edit</small></a>";
+        <?php } else { ?>
+            dataContent += "-";
+        <?php } ?>
+        <?php if (CrudMenuPermission($MenuUrl, $user_id, 'delete')) { ?>
+            dataContent += "<a  id='btn-delete-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-danger ml-2 btn-option ' ><small><span class='fas fa-trash'></span> Delete</small></a>";
+        <?php } else { ?>
+            dataContent += "-";
+        <?php } ?>
         dataContent += "</div>";
         $('#' + id).attr('data-content', dataContent).popover();
     }

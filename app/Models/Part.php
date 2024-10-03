@@ -37,74 +37,28 @@ class Part extends Model
     ];
     public static function jsonList($req)
     {
-        $page = $req->input('page');
-        $limit = $req->input('rows');
-        $sidx = $req->input('sidx', 'id');
-        $sord = $req->input('sord', 'asc');
-        $start = ($page - 1) * $limit;
+        $page = $req->input('page'); // current page number
+        $limit = $req->input('rows'); // rows per page
+        $sidx = $req->input('sidx'); // sort column
+        $sord = $req->input('sord'); // sort direction
 
-        // Total count of records
-        $qry = "SELECT COUNT(1) AS count from vw_part";
+        $query = DB::table('vw_part as a')
+            ->select('a.*');
+
         if ($req->search) {
-            $qry .= " WHERE part_name LIKE '%$req->search%' ";
-        }
-        $countResult = DB::select($qry);
-        $count = $countResult[0]->count;
-
-        // Total pages calculation
-        if ($count > 0) {
-            $total_pages = ceil($count / $limit);
-        } else {
-            $total_pages = 0;
+            $query->where('a.supplier_name', 'like', '%' . $req->search . '%');
         }
 
-        // Fetch data using DB::raw
-        $query = "SELECT *  from vw_part ";
-        if ($req->search) {
-            $query .= " WHERE part_name LIKE '%$req->search%' ";
-        }
-        $query .= " ORDER BY  id  DESC  LIMIT  $start , $limit ";
-        $data = DB::select($query);
-
-        // Prepare rows for jqGrid
-        $rows = [];
-        foreach ($data as $item) {
-            $rows[] = [
-                'id'                => $item->id,
-                'supplier_id'       => $item->supplier_id,
-                'category_id'       => $item->category_id,
-                'model'             => $item->model,
-                'uniq'              => $item->uniq,
-                'forecast'          => $item->forecast,
-                'remarks'           => $item->remarks,
-                'part_number'       => $item->part_number,
-                'part_name'         => $item->part_name,
-                'unit_id'           => $item->unit_id,
-                'units_id'          => $item->units_id,
-                'qtyPerUnit'        => $item->qtyPerUnit,
-                'volumePerDays'     => $item->volumePerDays,
-                'qtySafety'         => $item->qtySafety,
-                'safetyForDays'     => $item->safetyForDays,
-                'status_part'       => $item->status_part,
-                'supplier_name'     => $item->supplier_name,
-                'name_category'     => $item->name_category,
-                'units_code'        => $item->code_units,
-                'unit_code'         => $item->code_unit,
-                'created_at'        => $item->created_at,
-                'created_by'        => $item->created_by,
-                'updated_at'        => $item->updated_at,
-                'updated_by'        => $item->updated_by,
-                'cell' => [
-                    $item->id,
-                ] // Adjust fields as needed
-            ];
-        }
-
+        $count = $query->count();
+        $data = $query->skip(($page - 1) * $limit)
+            ->take($limit)
+            ->get();
+        $totalPages = ($count > 0) ? ceil($count / $limit) : 0;
         $response = [
             'page'      => $page,
-            'total'     => $total_pages,
+            'total'     => $totalPages,
             'records'   => $count,
-            'rows'      => $rows
+            'rows'      => $data->toArray(),
         ];
         return $response;
     }

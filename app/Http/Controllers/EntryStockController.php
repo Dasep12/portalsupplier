@@ -25,66 +25,6 @@ class EntryStockController extends Controller
         return response()->json($data);
     }
 
-    // public function jsonCrudPart(Request $req)
-    // {
-    //     $act = $req->CrudActionPart;
-    //     $data = [
-    //         "supplier_id"       => $req->supplier_id,
-    //         "category_id"       => $req->category_id,
-    //         'model'             => $req->model,
-    //         'uniq'              => $req->uniq,
-    //         'part_number'       => $req->part_number,
-    //         'part_name'         => $req->part_name,
-    //         'unit_id'           => $req->unit_id,
-    //         'units_id'          => $req->units_id,
-    //         'qtyPerUnit'        => $req->qtyPerUnit,
-    //         'volumePerDays'     => $req->volumePerDays,
-    //         'qtySafety'         => $req->qtySafety,
-    //         'safetyForDays'     => $req->safetyForDays,
-    //         'remarks'           => $req->remarks,
-    //         'forecast'          => $req->forecast,
-    //         "status_part"       => isset($req->status_part) ? 1 : 0,
-    //         'created_by'        => 1
-    //     ];
-    //     switch (strtolower($act)) {
-    //         case "create":
-    //             $cek = Part::where('uniq', $req->uniq);
-    //             if ($cek->count() > 0) {
-    //                 return response()->json(['success' => false, 'msg' => 'Uniq ' . $req->uniq . ' Has Been Existing']);
-    //             }
-    //             Part::Create($data);
-    //             break;
-    //         case "update":
-    //             $supp = Part::find($req->id);
-    //             $supp->supplier_id   = $req->supplier_id;
-    //             $supp->category_id   = $req->category_id;
-    //             $supp->model         = $req->model;
-    //             $supp->uniq          = $req->uniq;
-    //             $supp->part_number   = $req->part_number;
-    //             $supp->part_name     = $req->part_name;
-    //             $supp->unit_id       = $req->unit_id;
-    //             $supp->units_id      = $req->units_id;
-    //             $supp->qtyPerUnit    = $req->qtyPerUnit;
-    //             $supp->qtySafety     = $req->qtySafety;
-    //             $supp->volumePerDays = $req->volumePerDays;
-    //             $supp->safetyForDays = $req->safetyForDays;
-    //             $supp->remarks       = $req->remarks;
-    //             $supp->forecast       = $req->forecast;
-    //             $supp->status_part   = isset($req->status_part) ? 1 : 0;
-    //             $supp->save();
-    //             break;
-    //         case "delete":
-    //             Part::where('id', $req->id)->delete();
-    //             break;
-    //     }
-    //     try {
-    //         DB::commit();
-    //         return response()->json(['success' => true, 'msg' => 'Successfully', 'data' => $req->part_name]);
-    //     } catch (Exception $ex) {
-    //         DB::rollBack();
-    //         return response()->json(['success' => false, 'msg' => $ex->getMessage()]);
-    //     }
-    // }
 
     public function uploadFiles(Request $request)
     {

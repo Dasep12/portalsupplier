@@ -90,10 +90,12 @@ Route::get('/jsonUsers', [UsersController::class, 'jsonUsers']);
 Route::post('/jsonCrudUser', [UsersController::class, 'jsonCrudUser']);
 Route::get('/jsonListRoles', [UsersController::class, 'jsonListRoles']);
 Route::get('/jsonDetailListUserMenu', [UsersController::class, 'jsonDetailListUserMenu']);
-// Route::middleware('check.sessionLogin')->prefix('/')->group(function () {
-//     Route::get('/', [AuthController::class, 'index']);
-// });
 
-// Route::get('/administrator/deny', [DenyController::class, 'index'])->middleware('check.session');
-// Route::post('/auth', [AuthController::class, 'Auth']);
-// Route::get('/logout', [LogoutController::class, 'index']);
+
+Route::middleware('check.sessionLogin')->prefix('/')->group(function () {
+    Route::get('/', [AuthController::class, 'index']);
+});
+
+Route::get('/deny', [DenyController::class, 'index'])->middleware('check.session');
+Route::post('/auth', [AuthController::class, 'Auth']);
+Route::get('/logout', [LogoutController::class, 'index']);

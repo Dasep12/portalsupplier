@@ -13,63 +13,73 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-12">
-                        <div class="card" style="height: 500px;">
-                            <div class="card-body">
-                                <div class="row mb-1">
-                                    <div class="col-md-8">
-                                        <!-- kosong dulu -->
+                    @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
+                    <div class="card" style="height: 500px;">
+                        <div class="card-body">
+                            <div class="row mb-1">
+                                <div class="col-md-8">
+                                    <!-- kosong dulu -->
 
-                                    </div>
-                                    <div class="col-md-4 d-flex justify-content-end">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary btn-custom-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="fa fa-filter"></span> Filter
-                                            </button>
-                                            <form id="form-filter" class="mr-5 dropdown-menu p-4 bg-light" style="width:320px">
-                                                <h6>Filter Safety Stock</h6>
-                                                <div class="form-group form-group-sm">
-                                                    <div class="input-group input-group-sm">
-                                                        <select id="supplier_id" name="supplier_id" style="font-size: 0.85rem !important;" class="form-control form-control-sm custom-select select2">
-                                                        </select>
-                                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex justify-content-end">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary btn-custom-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-filter"></span> Filter
+                                        </button>
+                                        <form id="form-filter" class="mr-5 dropdown-menu p-4 bg-light" style="width:320px">
+                                            <h6>Filter Safety Stock</h6>
+                                            <div class="form-group form-group-sm">
+                                                <div class="input-group input-group-sm">
+                                                    <select id="supplier_id" name="supplier_id" style="font-size: 0.85rem !important;" class="form-control form-control-sm custom-select select2">
+                                                    </select>
                                                 </div>
-                                                <div class="form-group form-group-sm">
-                                                    <div class="input-group input-group-sm">
-                                                        <input type="text" placeholder="Search Part Name" class="form-control form-control-sm" name="part_name" id="part_name">
-                                                    </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" placeholder="Search Part Name" class="form-control form-control-sm" name="part_name" id="part_name">
                                                 </div>
+                                            </div>
 
-                                                <div class="form-group form-group-sm">
-                                                    <div class="input-group input-group-sm">
-                                                        <input id="date_upload" name="date_upload" value="<?= date('Y-m-d') ?>" type="date" class="form-control date" placeholder="End Date">
-                                                    </div>
+                                            <div class="form-group form-group-sm">
+                                                <div class="input-group input-group-sm">
+                                                    <input id="date_upload" name="date_upload" value="<?= date('Y-m-d') ?>" type="date" class="form-control date" placeholder="End Date">
                                                 </div>
-                                                <div class="form-group form-group-sm">
-                                                    <div class="input-group input-group-sm">
-                                                        <button type="button" id="filterBtn" class="btn btn-dark btn-sm"><span class="fa fa-search"></span> Search</button>
-                                                    </div>
+                                            </div>
+                                            <div class="form-group form-group-sm">
+                                                <div class="input-group input-group-sm">
+                                                    <button type="button" id="filterBtn" class="btn btn-dark btn-sm"><span class="fa fa-search"></span> Search</button>
                                                 </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="table-responsive">
-                                    <table id="jqGrid"></table>
-                                    <div id="jqGridPager"></div>
-                                </div>
-                                <div class="row mb-1">
-                                    <div class="col-lg-12 mt-2">
-                                        <button type="button" onclick="CrudUnit('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload Stock</button>
-
-                                        <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
-
-
-                                    </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="jqGrid"></table>
+                                <div id="jqGridPager"></div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-lg-12 mt-2">
+                                    @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
+                                    <button type="button" onclick="CrudUnit('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload Stock</button>
+                                    @endif
+                                    <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @else
+                    <div class="card" style="height: 500px;">
+                        <div class="card-body card-body d-flex justify-content-center align-items-center">
+                            <div class="row">
+                                <h1 class="fw-bold">Oops ! </h1><br>
+                                <h1> Sorry,module can't be access</h1>
+                            </div>
+                            <div class="row">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -84,21 +94,40 @@
                 method: "GET",
                 cache: false,
                 success: function(data) {
+                    var supplier_id = "{{ session()->get('supplier_id') }}"
                     // Clear the current options
                     $('#supplier_id').empty();
                     $('#suppliers_id').empty();
-                    $('#supplier_id').append('<option value="">All Supplier</option>');
-                    $('#suppliers_id').append('<option value="">All Supplier</option>');
+                    if (supplier_id == "*") {
+                        $('#supplier_id').append('<option value="">All Supplier</option>');
+                        $('#suppliers_id').append('<option value="">All Supplier</option>');
+                    }
                     // Loop through the data and append options
                     $.each(data, function(index, item) {
-                        $('#supplier_id').append($('<option>', {
-                            value: item.id, // assuming 'id' is the value to be sent
-                            text: item.supplier_name // assuming 'name' is the display text
-                        }));
-                        $('#suppliers_id').append($('<option>', {
-                            value: item.id, // assuming 'id' is the value to be sent
-                            text: item.supplier_name // assuming 'name' is the display text
-                        }));
+                        if (supplier_id == item.id) {
+                            $('#supplier_id').append($('<option>', {
+                                value: item.id, // assuming 'id' is the value to be sent
+                                text: item.supplier_name // assuming 'name' is the display text
+                            }));
+
+                            $('#suppliers_id').append($('<option>', {
+                                value: item.id, // assuming 'id' is the value to be sent
+                                text: item.supplier_name // assuming 'name' is the display text
+                            }));
+                            return false;
+                        }
+
+                        if (supplier_id == "*") {
+                            $('#supplier_id').append($('<option>', {
+                                value: item.id, // assuming 'id' is the value to be sent
+                                text: item.supplier_name // assuming 'name' is the display text
+                            }));
+
+                            $('#suppliers_id').append($('<option>', {
+                                value: item.id, // assuming 'id' is the value to be sent
+                                text: item.supplier_name // assuming 'name' is the display text
+                            }));
+                        }
                     });
                 }
             })
@@ -230,6 +259,7 @@
                     break;
             }
         }
+
 
 
         $("#filterBtn").click(function() {

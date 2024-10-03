@@ -69,22 +69,33 @@ function getRomawiMonth($month)
 
 function CrudMenuPermission($MenuUrl, $UserId, $act)
 {
-    $data = DB::select("SELECT `delete` ,`edit`,`add` FROM vw_sys_menu WHERE MenuUrl = '$MenuUrl' and user_id = '$UserId'    ");
+    $data = DB::table("vw_menu")
+        ->where('MenuUrl', $MenuUrl)
+        ->where('user_id', $UserId)
+        ->select('view', 'delete', 'edit', 'add')
+        ->get()
+        ->first();
     if ($act == "add") {
         if ($data) {
-            return $data[0]->add;
+            return $data->add;
         } else {
             return null;
         }
     } else  if ($act == "delete") {
         if ($data) {
-            return $data[0]->delete;
+            return $data->delete;
         } else {
             return null;
         }
     } else if ($act == "edit") {
         if ($data) {
-            return $data[0]->edit;
+            return $data->edit;
+        } else {
+            return null;
+        }
+    } else if ($act == "view") {
+        if ($data) {
+            return $data->view;
         } else {
             return null;
         }

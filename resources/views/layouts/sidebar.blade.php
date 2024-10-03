@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 
 $sidebar = DB::table('vw_menu')
   ->select('*')
+  ->where('role_id', session()->get('role_id'))
+  ->where('user_id', session()->get('user_id'))
   ->get();
 
 $url = request()->segment(1);
@@ -24,7 +26,7 @@ $show = "";
         <div class="info">
           <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
             <span>
-              Hizrian
+              {{ session()->get("fullname") }}
               <span class="user-level">Administrator</span>
             </span>
           </a>
@@ -49,8 +51,10 @@ $show = "";
           <?php
           $cekUrl = DB::table('vw_menu')
             ->where('MenuUrl', $url)
-            ->where('ParentMenu', $sd->Menu_id)
+            ->where('ParentMenu', $sd->menu_id)
             ->where('MenuLevel', 2)
+            ->where('role_id', session()->get('role_id'))
+            ->where('user_id', session()->get('user_id'))
             ->select('*')
             ->get();
           $active = $cekUrl->count() > 0 ? 'active' : '';
@@ -67,7 +71,9 @@ $show = "";
               <ul class="nav nav-collapse">
                 <?php
                 $childMenu = DB::table('vw_menu')
-                  ->where('ParentMenu', $sd->Menu_id)
+                  ->where('ParentMenu', $sd->menu_id)
+                  ->where('role_id', session()->get('role_id'))
+                  ->where('user_id', session()->get('user_id'))
                   ->select('*')
                   ->get();
                 ?>

@@ -13,6 +13,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
                     <div class="card" style="height: 500px;">
                         <div class="card-body">
                             <div class="row mb-1">
@@ -55,6 +56,18 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                    <div class="card" style="height: 500px;">
+                        <div class="card-body card-body d-flex justify-content-center align-items-center">
+                            <div class="row">
+                                <h1 class="fw-bold">Oops ! </h1><br>
+                                <h1> Sorry,module can't be access</h1>
+                            </div>
+                            <div class="row">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

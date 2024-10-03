@@ -28,6 +28,16 @@ class MonitorStock extends Model
         $query = DB::table('vw_monitorstock as a')
             ->select('a.*');
 
+        if (session()->get('supplier_id') == "*") {
+            $query->whereNotNull('a.supplier_id');
+        } else {
+            $query->where('a.supplier_id', session()->get('supplier_id'));
+        }
+
+        if ($req->search) {
+            $query->where('a.part_name', 'like', '%' . $req->search . '%');
+        }
+
         $count = $query->count();
 
         $data = $query->skip(($page - 1) * $limit)
