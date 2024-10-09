@@ -151,7 +151,11 @@
                 success: function(data) {
                     if (data.msg == "success") {
                         setTimeout(function() {
-                            window.location.href = "{{ url('dashboard') }}"
+                            if (data.roles == "*") {
+                                window.location.href = "{{ url('dashboard') }}"
+                            } else {
+                                window.location.href = "{{ url('monitorStock') }}"
+                            }
                         }, 100)
                     } else {
                         showToast(data.msg, "", '')

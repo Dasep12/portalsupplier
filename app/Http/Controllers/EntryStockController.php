@@ -10,6 +10,14 @@ use App\Models\Supplier;
 use App\Models\UpdateStock;
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
 
 class EntryStockController extends Controller
 {
@@ -45,30 +53,30 @@ class EntryStockController extends Controller
             $processedData = [];
             $error = [];
             foreach ($sheetData as  $row) {
-                $suppName = Supplier::where('supplier_name', $row['A'])->count();
+                $suppName = Supplier::where('supplier_name', $row['B'])->count();
                 if ($suppName <= 0) {
-                    array_push($error, ['Supplier ' . $row['A'] . ' not found']);
+                    array_push($error, ['Supplier ' . $row['B'] . ' not found']);
                 }
 
                 // cek part number 
-                $partNumber = Part::where('part_number', $row['B'])->count();
+                $partNumber = Part::where('part_number', $row['C'])->count();
                 if ($partNumber <= 0) {
-                    array_push($error, ['Part Number ' . $row['B'] . ' not found']);
+                    array_push($error, ['Part Number ' . $row['C'] . ' not found']);
                 }
 
                 // cek part name 
-                $partName = Part::where('part_name', $row['C'])->count();
+                $partName = Part::where('part_name', $row['D'])->count();
                 if ($partName <= 0) {
-                    array_push($error, ['Part Name ' . $row['C'] . ' not found']);
+                    array_push($error, ['Part Name ' . $row['D'] . ' not found']);
                 }
 
 
                 $res = [
                     'date_upload'     => date('d M Y'),
-                    'supplier_name'   => $row['A'],
-                    'part_number'     => $row['B'],
-                    'part_name'       => $row['C'],
-                    'qty_safety'      => $row['D'],
+                    'supplier_name'   => $row['B'],
+                    'part_number'     => $row['C'],
+                    'part_name'       => $row['D'],
+                    'qty_safety'      => $row['E'],
                 ];
                 array_push($processedData, $res);
             }
@@ -148,5 +156,93 @@ class EntryStockController extends Controller
 
 
 
-    public function downloadtemplate(Request $req) {}
+    public function downloadFormat(Request $req)
+    {
+        $supplier = $req->suppliers_id;
+
+        $data = DB::table('tbl_mst_part as a')
+            ->leftJoin('tbl_mst_supplier as b', 'a.supplier_id', '=', 'b.id')
+            ->where('a.supplier_id', $supplier)
+            ->select('a.*', 'b.supplier_name')
+            ->get();
+        // Create a new Spreadsheet object
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+
+        // Set some data in the spreadsheet
+        $sheet->setCellValue('A1', 'NO');
+        $sheet->setCellValue('B1', 'SUPPLIER');
+        $sheet->setCellValue('C1', 'PART NUMBER');
+        $sheet->setCellValue('D1', 'PART NAME');
+        $sheet->setCellValue('E1', 'QTY SAFETY');
+
+
+        // Set background color for a range of cells
+        $sheet->getStyle('A1:E1')->applyFromArray([
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FABF8F'], // Magenta background
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+            'font' => [
+                'bold' => true,
+            ],
+        ]);
+
+        // Example: Freeze the first row
+        $sheet->freezePane('A2');
+        // Auto size columns based on the content
+        $this->autoSizeColumns($sheet, range('A', 'E'));
+
+        $start = 2;
+        $no = 1;
+
+        if (count($data) > 0) {
+            foreach ($data as $d) {
+                $sheet->setCellValue('A' . $start, $no++);
+                $sheet->setCellValue('B' . $start, strtoupper($d->supplier_name));
+                $sheet->setCellValue('C' . $start, $d->part_number);
+                $sheet->setCellValue('D' . $start, strtoupper($d->part_name));
+                $sheet->setCellValue('E' . $start, 0);
+                // Apply striped background color (alternating rows)
+                $backgroundColor = ($start % 2 == 0) ? 'FFFFFFFF' : 'FDE9D9'; // Light gray for even rows, white for odd rows
+                $sheet->getStyle("A$start:E$start")->applyFromArray([
+                    'fill' => [
+                        'fillType' => Fill::FILL_SOLID,
+                        'startColor' => ['argb' => $backgroundColor],
+                    ],
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                            'color' => ['argb' => '000000'],
+                        ],
+                    ],
+                ]);
+                $start++;
+            }
+        } else {
+            $sheet->setCellValue('A' . $start, "data not found");
+            $sheet->mergeCells('A' . $start . ':E' . $start + 1);
+        }
+
+        // Save the spreadsheet to a file
+        $writer = new Xlsx($spreadsheet);
+        $tempFile = tempnam(sys_get_temp_dir(), 'php');
+        $writer->save($tempFile);
+        // Return the file as a response
+        return response()->download($tempFile, 'export.xlsx')->deleteFileAfterSend(true);
+    }
+
+    private function autoSizeColumns($sheet, array $columns)
+    {
+        foreach ($columns as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+    }
 }

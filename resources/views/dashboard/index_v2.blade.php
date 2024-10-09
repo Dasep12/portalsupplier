@@ -46,7 +46,7 @@
         </div>
         <div class="page-inner" id="dashboardForm">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card card-ver bg-secondary">
@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="text">
                                         <span class="title">All Supplier</span>
-                                        <span id="shortageStock" class="value">20</span>
+                                        <span id="allSupplier" class="value">0</span>
                                         <!-- <span class="detail_card_dashboard">Detail</span> -->
                                     </div>
                                 </div>
@@ -97,16 +97,16 @@
                                         <img src="{{ asset('assets/img/product.png') }}">
                                     </div>
                                     <div class="text">
-                                        <span class="title">Safety Stock</span>
+                                        <span class="title">Safe Stock</span>
                                         <span id="safetyStockSupplier" class="value counting">7</span>
-                                        <span class="detail_card_dashboard">Supplier</span>
+                                        <span class="safetyStockSupplier">Supplier</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9 ">
+                <div class="col-lg-10">
                     <div class="row">
                         <div class="col-lg-3 margin-left-card-custom">
                             <div class="card card-ver card-ver3 bg-secondary">
@@ -119,7 +119,7 @@
                                     </div>
                                     <div class="text">
                                         <span class="title">All Part</span>
-                                        <span id="shortageStock" class="value">20</span>
+                                        <span id="allParts" class="value">0</span>
                                         <!-- <span class="detail_card_dashboard">Detail</span> -->
                                     </div>
                                 </div>
@@ -136,7 +136,7 @@
                                     </div>
                                     <div class="text">
                                         <span class="title">Shortage Stock</span>
-                                        <span id="shortageStock" class="value">20</span>
+                                        <span id="shortageStock_part" class="value">0</span>
                                         <span class="detail_card_dashboard">Part</span>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
                                     </div>
                                     <div class="text">
                                         <span class="title">Potential Stock</span>
-                                        <span id="shortageStock" class="value">20</span>
+                                        <span id="PotentialStock_part" class="value">0</span>
                                         <span class="detail_card_dashboard">Part</span>
                                     </div>
                                 </div>
@@ -169,8 +169,8 @@
                                         <img src="{{ asset('assets/img/product.png') }}">
                                     </div>
                                     <div class="text">
-                                        <span class="title">Safety Stock</span>
-                                        <span id="shortageStock" class="value">20</span>
+                                        <span class="title">Safe Stock</span>
+                                        <span id="SafetyStock_part" class="value">0</span>
                                         <span class="detail_card_dashboard">Part</span>
                                     </div>
                                 </div>
@@ -193,17 +193,8 @@
                                                     <th>Lates Update</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <?php for ($i = 0; $i < 25; $i++): ?>
-                                                    <tr>
-                                                        <td>Bonecom Tricom</td>
-                                                        <td>71941-X7A00-A</td>
-                                                        <td>STAY, RR SEAT HEADREST</td>
-                                                        <td>20</td>
-                                                        <td><label class="text-white badge badge-danger" for="">Shortage</label></td>
-                                                        <td>14 Aug 2024 13:00:00</td>
-                                                    </tr>
-                                                <?php endfor ?>
+                                            <tbody id="tableStock">
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -266,12 +257,9 @@
             }, 300); // Wait for 0.3s to match the fade-out effect
         }
 
-
         function refreshDashboard() {
             updateCounter()
         }
-
-
 
         /* View Full Screen */
         var elem = document.getElementById("dashboardForm");
@@ -418,11 +406,82 @@
         }
 
         window.onload = function() {
-            autoScrollTable()
+
             var twoMinutes = $("#refreshDashboardTimer").val() * 60, // 2 minutes in seconds
                 display = document.getElementById('btnRefresh');
             startCountdown(twoMinutes, display);
         };
+
+
+        function jsonAllPart() {
+            $.ajax({
+                url: "{{ url('jsonAllPart') }}",
+                method: "GET",
+                cache: false,
+                success: function(res) {
+                    $("#allParts").html(res)
+                }
+            })
+        }
+
+        function jsonAllSupplier() {
+            $.ajax({
+                url: "{{ url('jsonAllSupplier') }}",
+                method: "GET",
+                cache: false,
+                success: function(res) {
+                    $("#allSupplier").html(res)
+                }
+            })
+        }
+
+        function jsonTableStock() {
+            $.ajax({
+                url: "{{ url('jsonTableStock') }}",
+                method: "GET",
+                cache: false,
+                success: function(res) {
+                    var html = '';
+                    for (let i = 0; i < res.length; i++) {
+                        var badge = res[i].stockStatus == "SHORTAGE" ? "badge-danger" : "badge-success";
+                        html += `<tr>`
+                        html += `<td>${res[i].supplier_name}</td>`
+                        html += `<td>${res[i].part_number}</td>`
+                        html += `<td>${res[i].part_name}</td>`
+                        html += `<td>${res[i].stockSupplier}</td>`
+                        html += `<td><label class="text-white badge ${badge}" for="">${res[i].stockStatus}</label></td>`
+                        html += `<td>${res[i].last_update == null ? '-' : res[i].last_update }</td>`
+                        html += `</tr>`
+                    }
+                    if (res.length > 5) {
+                        autoScrollTable()
+                    }
+                    $("#tableStock").html(html);
+                }
+            })
+        }
+
+        function jsonStockPart(type, status) {
+            $.ajax({
+                url: "{{ url('jsonStockPart') }}",
+                method: "GET",
+                cache: false,
+                data: {
+                    types: type
+                },
+                success: function(res) {
+                    $("#" + status + "_part").html(res)
+                }
+            })
+        }
+
+
+        jsonAllPart()
+        jsonStockPart("SHORTAGE", "shortageStock")
+        jsonStockPart("POTENTIAL", "PotentialStock")
+        jsonStockPart("SAFETY", "SafetyStock")
+        jsonAllSupplier()
+        jsonTableStock()
     </script>
 
     @endsection

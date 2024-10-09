@@ -75,6 +75,7 @@ class Users extends Model
                 'a.MenuIcon',
                 'a.MenuLevel',
                 'a.LevelNumber',
+                'a.Creates',
                 DB::raw('IFNULL(X.enable_menu, 0) as enable_menu'),
                 DB::raw('IFNULL(Y.add, 0) as CanCreate'),
                 DB::raw('IFNULL(Y.edit, 0) as CanUpdate'),

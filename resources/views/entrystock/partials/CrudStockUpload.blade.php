@@ -32,21 +32,19 @@
                     </div>
                   </div>
                 </div>
-
-
               </div>
-
             </form>
           </div>
         </div>
 
-        <div class="row mb-2 mt-1">
+        <div class="row mb-4 mt-1">
           <div class="col-lg-12 mb-1">
             <div class="progress" style="height: 35px; display: none;">
               <div id="errorText" class="progress-bar progress-bar-animated" role="progressbar" style="width: 0%;"></div>
             </div>
           </div>
         </div>
+
         <form action="#" enctype="multipart/form-data" method="post" id="CrudEntryStockForm2">
           @csrf
           <div class="row">
@@ -54,7 +52,7 @@
               <div class="table-responsive">
                 <table id="JqGridTempUpload"></table>
                 <div id="jqGridPager2"></div>
-                <a href="" class="mt-2 btn btn-primary btn-success-custom"><i class="fa fa-file-excel"></i> Download Template</a>
+                <a onclick="DownloadFormat()" class="mt-2 mb-4 btn btn-primary btn-success-custom text-white"><i class="fa fa-file-excel"></i> Download Template</a>
               </div>
             </div>
           </div>
@@ -111,7 +109,7 @@
     pager: "#jqGridPager2",
     loadComplete: function(data) {
       var modalWidth = $('.table-responsive').width(); // Get the modal width
-      $("#JqGridTempUpload").setGridWidth(modalWidth * 1.128); // Set jqGrid width (95% of modal width)
+      $("#JqGridTempUpload").setGridWidth(modalWidth * 1.09); // Set jqGrid width (95% of modal width)
     },
   });
 
@@ -257,4 +255,30 @@
       return false;
     }
   })
+
+  function DownloadFormat() {
+    $.ajax({
+      url: "{{ url('downloadFormat') }}",
+      method: "GET",
+      data: {
+        suppliers_id: $("#suppliers_id").val()
+      },
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: function(data, status, xhr) {
+        // Create a URL for the Blob object and initiate download
+        var blob = new Blob([data], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "template upload daily safety stock.xlsx";
+        link.click();
+      },
+      error: function(xhr, status, error) {
+        console.error('Error exporting file:', error);
+      }
+    })
+  }
 </script>

@@ -20,11 +20,11 @@ class CekMenuAccess
         $roleId = session()->get("role_id");
         $userId = session()->get("user_id");
         $menuUrl  =  request()->path();
-        $data =  DB::select("SELECT enable_menu FROM  vw_sys_menu WHERE user_id = '" . $userId . "' AND MenuUrl='" . $menuUrl . "' AND role_id = '" . $roleId . "'  ");
+        $data =  DB::select("SELECT enable_menu FROM  vw_menu WHERE user_id = '" . $userId . "' AND MenuUrl='" . $menuUrl . "' AND role_id = '" . $roleId . "'  ");
 
         if ($data != null) {
             if ($data[0]->enable_menu == 0) {
-                return redirect('/administrator/deny');
+                return redirect('deny');
             }
         }
         return $next($request);

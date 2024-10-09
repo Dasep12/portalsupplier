@@ -12,6 +12,6 @@ class DenyController extends Controller
     public function index()
     {
 
-        return view("administrator::deny");
+        return view("deny.index");
     }
 }

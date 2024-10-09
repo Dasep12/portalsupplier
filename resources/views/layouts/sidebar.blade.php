@@ -21,13 +21,13 @@ $show = "";
     <div class="sidebar-content">
       <div class="user">
         <div class="avatar-sm float-left mr-2">
-          <img src="../assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+          <img src="https://cdn-icons-png.flaticon.com/128/12249/12249819.png" alt="..." class="avatar-img rounded-circle">
         </div>
         <div class="info">
           <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
             <span>
-              {{ session()->get("fullname") }}
-              <span class="user-level">Administrator</span>
+              {{ ucwords(strtolower(session()->get("fullname"))) }}
+              <span class="user-level">Login as {{ ucwords(strtolower(session()->get("roleName"))) }}</span>
             </span>
           </a>
           <div class="clearfix"></div>

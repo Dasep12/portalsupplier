@@ -115,6 +115,10 @@
             name: 'id_accessMenu',
             hidden: true,
         }, {
+            label: 'MenuLevel',
+            name: 'MenuLevel',
+            hidden: true,
+        }, {
             label: 'Menu',
             name: 'MenuName',
             align: 'left',
@@ -182,6 +186,7 @@
             });
         },
         rowattr: function(item) {
+            console.log(item.MenuLevel)
             if ($("#CrudUserAction").val() == "delete") {
                 return {
                     "class": "ui-state-disabled ui-jqgrid-disablePointerEvents"
@@ -248,8 +253,9 @@
             isdisabled = "disabled";
         }
 
+
         var checked = "";
-        // var roleIdx = "";
+        // console.log(rowObject.Creates);
         if ($("#role_id").val() != "" && $("#id").val() != "") {
             if (rowObject.id_accessMenu != null && cellvalue == true) {
                 checked = "checked='checked'";
@@ -261,6 +267,9 @@
             setGridData(idrow, colname);
         }, 300);
 
+        if (parseInt(rowObject.MenuLevel) <= 1) {
+            return ``;
+        }
         return `<input type='checkbox' id='${idrow}_${colname}' ${checked} value='${cellvalue}' onchange="setGridData('${idrow}','${colname}')" ${isdisabled} />`
     }
 </script>

@@ -35,7 +35,7 @@
                 </div>
                 <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 
-                    <li class="nav-item dropdown hidden-caret">
+                    <!-- <li class="nav-item dropdown hidden-caret">
                         <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-bell"></i>
                             <span class="notification">4</span>
@@ -60,12 +60,12 @@
                                 </div>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
 
                     <li class="nav-item dropdown hidden-caret">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                             <div class="avatar-sm">
-                                <img src="../assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                                <img src="https://cdn-icons-png.flaticon.com/128/1799/1799778.png" alt="..." class="avatar-img rounded-circle">
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated fadeIn">

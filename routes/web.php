@@ -25,71 +25,80 @@ use App\Http\Controllers\UsersController;
 |
 */
 
-Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::middleware(['check.session', 'check.menuAccess'])->group(function () {
+
+    // DASHBOARD ROUTES
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/jsonAllPart', [DashboardController::class, 'jsonAllPart']);
+    Route::get('/jsonAllSupplier', [DashboardController::class, 'jsonAllSupplier']);
+    Route::get('/jsonTableStock', [DashboardController::class, 'jsonTableStock']);
+    Route::get('/jsonStockPart', [DashboardController::class, 'jsonStockPart']);
 
 
-// SUPPLIER ROUTES
-Route::get('/supplier', [SupplierController::class, 'index']);
-Route::get('/jsonSupplierList', [SupplierController::class, 'jsonSupplierList']);
-Route::post('/jsonCrudSupplier', [SupplierController::class, 'jsonCrudSupplier']);
-Route::post('/uploadFilesSupplier', [SupplierController::class, 'uploadFilesSupplier']);
-Route::get('/exportSupplier', [SupplierController::class, 'exportSupplier']);
+    // SUPPLIER ROUTES
+    Route::get('/supplier', [SupplierController::class, 'index']);
+    Route::get('/jsonSupplierList', [SupplierController::class, 'jsonSupplierList']);
+    Route::post('/jsonCrudSupplier', [SupplierController::class, 'jsonCrudSupplier']);
+    Route::post('/uploadFilesSupplier', [SupplierController::class, 'uploadFilesSupplier']);
+    Route::get('/exportSupplier', [SupplierController::class, 'exportSupplier']);
 
 
-// UNITS ROUTES
-Route::get('/units', [UnitsController::class, 'index']);
-Route::get('/jsonUnitsList', [UnitsController::class, 'jsonUnitsList']);
-Route::get('/jsonUnitsListDetail', [UnitsController::class, 'jsonUnitsListDetail']);
-Route::post('/jsonCrudUnits', [UnitsController::class, 'jsonCrudUnits']);
-Route::get('/jsonParent', [UnitsController::class, 'jsonParent']);
+    // UNITS ROUTES
+    Route::get('/units', [UnitsController::class, 'index']);
+    Route::get('/jsonUnitsList', [UnitsController::class, 'jsonUnitsList']);
+    Route::get('/jsonUnitsListDetail', [UnitsController::class, 'jsonUnitsListDetail']);
+    Route::post('/jsonCrudUnits', [UnitsController::class, 'jsonCrudUnits']);
+    Route::get('/jsonParent', [UnitsController::class, 'jsonParent']);
 
 
-// CATEGORY ROUTES
-Route::get('/category', [CategoryController::class, 'index']);
-Route::get('/jsonCategoryList', [CategoryController::class, 'jsonCategoryList']);
-Route::post('/jsonCrudCategory', [CategoryController::class, 'jsonCrudCategory']);
+    // CATEGORY ROUTES
+    Route::get('/category', [CategoryController::class, 'index']);
+    Route::get('/jsonCategoryList', [CategoryController::class, 'jsonCategoryList']);
+    Route::post('/jsonCrudCategory', [CategoryController::class, 'jsonCrudCategory']);
 
 
-// PART ROUTES
-Route::get('/part', [PartController::class, 'index']);
-Route::get('/jsonPartList', [PartController::class, 'jsonPartList']);
-Route::post('/jsonCrudPart', [PartController::class, 'jsonCrudPart']);
-Route::get('/jsonMultiDeletePart', [PartController::class, 'jsonMultiDeletePart']);
-Route::get('/jsonListSupplier', [PartController::class, 'jsonListSupplier']);
-Route::get('/jsonListCategory', [PartController::class, 'jsonListCategory']);
-Route::get('/jsonListPackage', [PartController::class, 'jsonListPackage']);
-Route::get('/jsonListUnits', [PartController::class, 'jsonListUnits']);
-Route::post('/loadPart', [PartController::class, 'loadPart']);
-Route::post('/uploadPart', [PartController::class, 'uploadPart']);
-Route::get('/exportPart', [PartController::class, 'exportPart']);
+    // PART ROUTES
+    Route::get('/part', [PartController::class, 'index']);
+    Route::get('/jsonPartList', [PartController::class, 'jsonPartList']);
+    Route::post('/jsonCrudPart', [PartController::class, 'jsonCrudPart']);
+    Route::get('/jsonMultiDeletePart', [PartController::class, 'jsonMultiDeletePart']);
+    Route::get('/jsonListSupplier', [PartController::class, 'jsonListSupplier']);
+    Route::get('/jsonListCategory', [PartController::class, 'jsonListCategory']);
+    Route::get('/jsonListPackage', [PartController::class, 'jsonListPackage']);
+    Route::get('/jsonListUnits', [PartController::class, 'jsonListUnits']);
+    Route::post('/loadPart', [PartController::class, 'loadPart']);
+    Route::post('/uploadPart', [PartController::class, 'uploadPart']);
+    Route::get('/exportPart', [PartController::class, 'exportPart']);
 
 
 
-// Entry Stock
-Route::get('/entrystock', [EntryStockController::class, 'index']);
-Route::get('/jsonStockList', [EntryStockController::class, 'jsonStockList']);
-Route::post('/uploadFiles', [EntryStockController::class, 'uploadFiles'])->name('excel.upload.post');
-Route::post('/jsonImportStock', [EntryStockController::class, 'jsonImportStock']);
+    // ENTRY STOCK ROUTES
+    Route::get('/entrystock', [EntryStockController::class, 'index']);
+    Route::get('/jsonStockList', [EntryStockController::class, 'jsonStockList']);
+    Route::post('/uploadFiles', [EntryStockController::class, 'uploadFiles'])->name('excel.upload.post');
+    Route::post('/jsonImportStock', [EntryStockController::class, 'jsonImportStock']);
+    Route::get('/downloadFormat', [EntryStockController::class, 'downloadFormat']);
 
 
-// Monitor Stock
-Route::get('/monitorStock', [MonitorStockController::class, 'index']);
-Route::get('/jsonMonitorList', [MonitorStockController::class, 'jsonMonitorList']);
+    // MONITOR STOCK ROUTES
+    Route::get('/monitorStock', [MonitorStockController::class, 'index']);
+    Route::get('/jsonMonitorList', [MonitorStockController::class, 'jsonMonitorList']);
 
 
-// Roles 
-Route::get('/roles', [RolesController::class, 'index']);
-Route::get('/jsonRole', [RolesController::class, 'jsonRole']);
-Route::get('/jsonDetailListMenu', [RolesController::class, 'jsonDetailListMenu']);
-Route::post('/jsonCrudRoles', [RolesController::class, 'jsonCrudRoles']);
+    // ROLES ROUTES
+    Route::get('/roles', [RolesController::class, 'index']);
+    Route::get('/jsonRole', [RolesController::class, 'jsonRole']);
+    Route::get('/jsonDetailListMenu', [RolesController::class, 'jsonDetailListMenu']);
+    Route::post('/jsonCrudRoles', [RolesController::class, 'jsonCrudRoles']);
 
 
-// Users 
-Route::get('/users', [UsersController::class, 'index']);
-Route::get('/jsonUsers', [UsersController::class, 'jsonUsers']);
-Route::post('/jsonCrudUser', [UsersController::class, 'jsonCrudUser']);
-Route::get('/jsonListRoles', [UsersController::class, 'jsonListRoles']);
-Route::get('/jsonDetailListUserMenu', [UsersController::class, 'jsonDetailListUserMenu']);
+    // USERS ROUTES 
+    Route::get('/users', [UsersController::class, 'index']);
+    Route::get('/jsonUsers', [UsersController::class, 'jsonUsers']);
+    Route::post('/jsonCrudUser', [UsersController::class, 'jsonCrudUser']);
+    Route::get('/jsonListRoles', [UsersController::class, 'jsonListRoles']);
+    Route::get('/jsonDetailListUserMenu', [UsersController::class, 'jsonDetailListUserMenu']);
+});
 
 
 Route::middleware('check.sessionLogin')->prefix('/')->group(function () {
