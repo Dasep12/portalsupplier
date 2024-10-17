@@ -14,65 +14,60 @@ $url = request()->segment(1);
                 </span>
                 Supplier
             </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
-                    <div class="card" style="height: 500px;">
-                        <div class="card-body">
-                            <div class="row mb-1">
-                                <div class="col-md-8">
-                                    @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
-                                    <button type="button" onclick="CrudSupplier('add','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
-                                    @endif
-                                    <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
-                                    @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
-                                    <button onclick="CrudSupplier('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
-                                    @endif
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="input-icon">
-                                        <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search for supplier name ...">
-                                        <span id="searchButton" style="cursor: pointer;" class="input-icon-addon">
-                                            <i class="fa fa-search"></i>
-                                        </span>
-                                    </div>
-                                </div>
+            @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-1">
+                        <div class="col-md-8">
+                            @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
+                            <button type="button" onclick="CrudSupplier('add','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
+                            @endif
+                            <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
+                            @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
+                            <button onclick="CrudSupplier('upload','*')" class="btn btn-primary btn-custom-primary"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+                            @endif
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search for supplier name ...">
+                                <span id="searchButton" style="cursor: pointer;" class="input-icon-addon">
+                                    <i class="fa fa-search"></i>
+                                </span>
                             </div>
-                            <div class="table-responsive">
-                                <table id="jqGrid"></table>
-                                <div id="jqGridPager"></div>
-                            </div>
-                            <div class="row mb-1">
-                                <div class="col-lg-3 mt-2">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" readonly value="Export Data" class="form-control field-export" aria-label="Text input with dropdown button">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
-                                            <div class="dropdown-menu">
-                                                <a style="cursor:pointer" onclick="exportToExcel('xls')" class="dropdown-item"><i class="fa fa-file-excel"></i> Excel</a>
-                                                <a style="cursor:pointer" onclick="exportToExcel('pdf')" class="dropdown-item"><i class="fa fa-file-pdf"></i> Pdf</a>
-                                            </div>
-                                        </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="jqGrid"></table>
+                        <div id="jqGridPager"></div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-lg-3 mt-2">
+                            <div class="input-group input-group-sm">
+                                <input type="text" readonly value="Export Data" class="form-control field-export" aria-label="Text input with dropdown button">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
+                                    <div class="dropdown-menu">
+                                        <a style="cursor:pointer" onclick="exportToExcel('xls')" class="dropdown-item"><i class="fa fa-file-excel"></i> Excel</a>
+                                        <a style="cursor:pointer" onclick="exportToExcel('pdf')" class="dropdown-item"><i class="fa fa-file-pdf"></i> Pdf</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    @else
-                    <div class="card" style="height: 500px;">
-                        <div class="card-body card-body d-flex justify-content-center align-items-center">
-                            <div class="row">
-                                <h1 class="fw-bold">Oops ! </h1><br>
-                                <h1> Sorry,module can't be access</h1>
-                            </div>
-                            <div class="row">
-                            </div>
-                        </div>
-                    </div>
-                    @endif
                 </div>
             </div>
+            @else
+            <div class="card" style="height: 500px;">
+                <div class="card-body card-body d-flex justify-content-center align-items-center">
+                    <div class="row">
+                        <h1 class="fw-bold">Oops ! </h1><br>
+                        <h1> Sorry,module can't be access</h1>
+                    </div>
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>
@@ -84,6 +79,8 @@ $url = request()->segment(1);
 @include('supplier.partials.CrudSupplier')
 <script>
     var dataTemp = [];
+
+
 
     function reloadGridList() {
         $("#jqGrid").jqGrid('setGridParam', {
@@ -120,6 +117,7 @@ $url = request()->segment(1);
             }
         });
     });
+    // Get the element
 
     $("#jqGrid").jqGrid({
         url: "{{ url('jsonSupplierList') }}",
@@ -176,8 +174,9 @@ $url = request()->segment(1);
         loadonce: false,
         rownumbers: true,
         rownumWidth: 30,
-        width: '100%',
+        // width: '100%',
         height: 300,
+        resizable: true,
         autoresizeOnLoad: true,
         autowidth: true,
         pager: "#jqGridPager",

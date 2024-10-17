@@ -101,6 +101,21 @@
 
    // Call the function once to show the clock immediately
    updateClock();
+
+
+   function adjustContentHeight() {
+      var windowHeight = window.innerHeight; // Get the height of the window (viewport)
+      var gridHeight = windowHeight - 310; // Subtract a fixed amount (e.g., for headers/footers)
+
+      // Assuming your grid has an ID of '#gridId'
+      $('#jqGrid').jqGrid('setGridHeight', gridHeight);
+
+   }
+
+   // Adjust height on window resize
+   window.addEventListener('resize', adjustContentHeight);
+   // Adjust the grid height when the page loads
+   window.addEventListener('load', adjustContentHeight);
 </script>
 </body>
 

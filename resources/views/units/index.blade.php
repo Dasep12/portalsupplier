@@ -11,53 +11,51 @@
                 </span>
                 Units
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
-                    <div class="card" style="height: 500px;">
-                        <div class="card-body">
-                            <div class="row mb-1">
-                                <div class="col-md-8">
-                                    @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
-                                    <button type="button" onclick="CrudUnit('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
-                                    @endif
-                                    <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="input-icon">
-                                        <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search for unit name ...">
-                                        <span id="searchButton" style="cursor: pointer;" class="input-icon-addon">
-                                            <i class="fa fa-search"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table id="jqGrid"></table>
-                                <div id="jqGridPager"></div>
-                            </div>
-                            <div class="row mb-1">
-                                <div class="col-lg-3 mt-2">
 
-                                </div>
+            @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-1">
+                        <div class="col-md-8">
+                            @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
+                            <button type="button" onclick="CrudUnit('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
+                            @endif
+                            <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-icon">
+                                <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search for unit name ...">
+                                <span id="searchButton" style="cursor: pointer;" class="input-icon-addon">
+                                    <i class="fa fa-search"></i>
+                                </span>
                             </div>
                         </div>
                     </div>
-                    @else
-                    <div class="card" style="height: 500px;">
-                        <div class="card-body card-body d-flex justify-content-center align-items-center">
-                            <div class="row">
-                                <h1 class="fw-bold">Oops ! </h1><br>
-                                <h1> Sorry,module can't be access</h1>
-                            </div>
-                            <div class="row">
-                            </div>
+                    <div class="table-responsive">
+                        <table id="jqGrid"></table>
+                        <div id="jqGridPager"></div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-lg-3 mt-2">
+
                         </div>
                     </div>
-                    @endif
                 </div>
             </div>
+            @else
+            <div class="card">
+                <div class="card-body card-body d-flex justify-content-center align-items-center">
+                    <div class="row">
+                        <h1 class="fw-bold">Oops ! </h1><br>
+                        <h1> Sorry,module can't be access</h1>
+                    </div>
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
+
     </div>
 </div>
 

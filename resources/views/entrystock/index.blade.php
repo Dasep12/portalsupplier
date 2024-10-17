@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-md-12">
                     @if (CrudMenuPermission($MenuUrl, $user_id, 'view'))
-                    <div class="card" style="height: 500px;">
+                    <div class="card">
                         <div class="card-body">
                             <div class="row mb-1">
                                 <div class="col-md-8">
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     @else
-                    <div class="card" style="height: 500px;">
+                    <div class="card">
                         <div class="card-body card-body d-flex justify-content-center align-items-center">
                             <div class="row">
                                 <h1 class="fw-bold">Oops ! </h1><br>
