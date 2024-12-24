@@ -46,7 +46,7 @@ class Part extends Model
             ->select('a.*');
 
         if ($req->search) {
-            $query->where('a.supplier_name', 'like', '%' . $req->search . '%');
+            $query->where('a.part_name', 'like', '%' . $req->search . '%');
         }
 
         $count = $query->count();

@@ -63,7 +63,8 @@ class SupplierController extends Controller
                 Supplier::where('id', $req->id)->delete();
                 break;
             case "upload":
-                foreach ($req->allData as $d) {
+                $sendData = json_decode($req->allData, true);
+                foreach ($sendData as $d) {
                     $par = [
                         "supplier_id" => $d['supplier_id'],
                         "supplier_name" => $d['supplier_name'],

@@ -290,14 +290,14 @@
     }
 
     function showButton(RowId, id, GridTable) {
-        var dataContent = "<div>";
+        var dataContent = "<div class='row d-flex justify-content-center'>";
         <?php if (CrudMenuPermission($MenuUrl, $user_id, 'edit')) { ?>
-            dataContent += "<a id='btn-update-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-success ml-2 btn-option' ><small><span class='fas fa-edit'></span> Edit</small></a>";
+            dataContent += "<div><a id='btn-update-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-success ml-1 btn-option' ><small><span class='fas fa-edit'></span> Edit</small></a></div>";
         <?php } else { ?>
             dataContent += "-";
         <?php } ?>
         <?php if (CrudMenuPermission($MenuUrl, $user_id, 'delete')) { ?>
-            dataContent += "<a  id='btn-delete-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-danger ml-2 btn-option ' ><small><span class='fas fa-trash'></span> Delete</small></a>";
+            dataContent += "<div><a  id='btn-delete-" + RowId + "-" + GridTable + "' class='btn btn-sm btn-link text-danger ml-2 btn-option ' ><small><span class='fas fa-trash'></span> Delete</small></a></div>";
         <?php } else { ?>
             dataContent += "-";
         <?php } ?>
@@ -330,8 +330,8 @@
         switch (act) {
             case 'create':
                 disabledEnableForm(false)
-                $("#unit_level").attr("disabled", true);
-                $("#status_supplier").attr("checked", true)
+                $("#unit_level").attr("readonly", true);
+                $("#status_unit").attr("checked", true)
                 $(".modal-title").html(`<i class="fas fa-plus-square"></i> Add Unit`)
                 $("#CrudUnitModal").modal('show');
                 break;

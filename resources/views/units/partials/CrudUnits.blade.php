@@ -15,7 +15,7 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="parent_id" class="placeholder">Parent Unit* :</label>
-                <select name="parent_id" class="form-control-sm input-border-bottom form-control" id="parent_id">
+                <select name="parent_id" class="form-control-sm form-control input-border-bottom-custom" id="parent_id">
                   <option value="*">*</option>
                 </select>
               </div>
@@ -23,13 +23,13 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="unit_level" class="placeholder">Level Unit* :</label>
-                <input id="unit_level" disabled value="1" name="unit_level" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="unit_level" placeholder="Level Unit" readonly value="1" name="unit_level" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="name_unit" class="placeholder">Name Unit* :</label>
-                <input id="name_unit" name="name_unit" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="name_unit" placeholder="Name Unit" name="name_unit" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>
@@ -38,13 +38,13 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="code_unit" class="placeholder">Code Unit* :</label>
-                <input id="code_unit" name="code_unit" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="code_unit" placeholder="Code Unit" name="code_unit" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="remarks" class="placeholder">Remarks</label>
-                <input id="remarks" name="remarks" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="remarks" placeholder="Remarks" name="remarks" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>

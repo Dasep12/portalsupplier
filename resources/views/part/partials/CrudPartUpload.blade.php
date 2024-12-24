@@ -13,7 +13,7 @@
         <div class="row">
           <form action="#" enctype="multipart/form-data" method="post" id="CrudPartFormUpload">
             @csrf
-            <div class="col md-3">
+            <div class="lg-3 ml-1">
               <div class="form-group ">
                 <label for="">File Upload</label>
                 <div id="btn-upload" style="position: relative;overflow: hidden;cursor:pointer" class="btn btn-dark btn-sm btn-block">
@@ -34,11 +34,12 @@
         <form action="#" enctype="multipart/form-data" method="post" id="CrudPartForm2">
           @csrf
           <div class="row">
-            <div class="col md-12">
-              <div class="table-responsive">
-                <table id="JqGridTempUpload"></table>
-                <div id="jqGridPager2"></div>
-              </div>
+            <div class="col-md-12 pt-2">
+              <!-- <div class="table-responsive"> -->
+              <table id="JqGridTempUpload"></table>
+              <div id="jqGridPager2"></div>
+              <a href="{{ asset('document/format_upload_part.xlsx') }}" class="mt-2 mb-3 btn btn-primary btn-success-custom"><i class="fa fa-file-excel"></i> Download Template</a>
+              <!-- </div> -->
             </div>
           </div>
           <div class="row mt-1" id="ErrorInfoUpload"></div>
@@ -122,19 +123,23 @@
     }, {
       label: 'Remarks',
       name: 'remarks',
-      // width: 75
+      width: 200
     }],
     height: 'auto',
     rowNum: 10,
+    rownumbers: true,
+    rownumWidth: 40,
+    gridview: true,
     pager: "#jqGridPager2",
     viewrecords: true,
-    width: '100%',
     autowidth: true,
+    shrinkToFit: false,
     height: 'auto',
     // caption: " ",
     loadComplete: function(data) {
-      var modalWidth = $('.table-responsive').width(); // Get the modal width
-      $("#JqGridTempUpload").setGridWidth(modalWidth * 1.1); // Set jqGrid width (95% of modal width)
+      $('#CrudPartModalUpload').on('shown.bs.modal', function() {
+        $("#JqGridTempUpload").setGridWidth($(this).find(".modal-body").width()); // Adjust grid width
+      });
     },
   });
 
@@ -152,6 +157,7 @@
       titleText: 'Safety Stock'
     }]
   });
+
 
 
   // Trigger form submission when a file is selected
@@ -267,13 +273,14 @@
     ignore: ":hidden",
     submitHandler: function(form) {
       var allData = $("#JqGridTempUpload").jqGrid('getRowData');
+      let jsonString = JSON.stringify(allData);
       $.ajax({
         url: "{{ url('uploadPart') }}",
         method: 'POST',
         cache: false,
         data: {
           "_token": "{{ csrf_token() }}",
-          allData: allData
+          allData: jsonString
         },
         success: function(response) {
           console.log(response.success)

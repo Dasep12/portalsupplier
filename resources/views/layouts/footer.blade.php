@@ -38,7 +38,7 @@
 <script>
    // Override default pager icons
 
-   var jqgridPage = ['jqGridPager', 'jqGridPager2']
+   var jqgridPage = ['jqGridPager', 'jqGridPager2', 'JqGridTempUpload']
 
    for (let jk = 0; jk < jqgridPage.length; jk++) {
       $grid = $("#" + jqgridPage[jk]);
@@ -109,7 +109,6 @@
 
       // Assuming your grid has an ID of '#gridId'
       $('#jqGrid').jqGrid('setGridHeight', gridHeight);
-
    }
 
    // Adjust height on window resize

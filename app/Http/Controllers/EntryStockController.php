@@ -97,7 +97,7 @@ class EntryStockController extends Controller
 
     public function jsonImportStock(Request $req)
     {
-        $sendData = $req->allData;
+        $sendData = json_decode($req->allData, true);
         $data = [];
         foreach ($sendData as $s) {
             // cek part 

@@ -15,7 +15,7 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="supplier_id" class="placeholder">Supplier </label>
-                <select required name="supplier_id" class="form-control-sm input-border-bottom form-control" id="supplier_id">
+                <select required name="supplier_id" class="form-control-sm form-control input-border-bottom-custom" id="supplier_id">
                   <option value="*">*</option>
                 </select>
               </div>
@@ -23,7 +23,7 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="category_id" class="placeholder">Category</label>
-                <select required name="category_id" class="form-control-sm input-border-bottom form-control" id="category_id">
+                <select required name="category_id" class="form-control-sm form-control input-border-bottom-custom" id="category_id">
                   <option value="*">*</option>
                 </select>
               </div>
@@ -31,7 +31,7 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="model" class="placeholder">Model</label>
-                <input id="model" name="model" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="model" placeholder="Model" name="model" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>
@@ -39,20 +39,20 @@
           <div class="row">
             <div class="col md-3">
               <div class="form-group ">
-                <label for="uniq" class="placeholder">Uniq</label>
-                <input id="uniq" name="uniq" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <label for="uniq" class="placeholder">Unique</label>
+                <input id="uniq" name="uniq" placeholder="Unique" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="part_name" class="placeholder">Part Name</label>
-                <input id="part_name" name="part_name" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="part_name" placeholder="Part Name" name="part_name" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="part_number" class="placeholder">Part Number</label>
-                <input id="part_number" name="part_number" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="part_number" placeholder="Part Number" name="part_number" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="unit_id" class="placeholder">Package</label>
-                <select required name="unit_id" class="form-control-sm input-border-bottom form-control" id="unit_id">
+                <select required name="unit_id" class="form-control-sm  form-control input-border-bottom-custom" id="unit_id">
                   <option value="*">*</option>
                 </select>
               </div>
@@ -69,7 +69,7 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="units_id" class="placeholder">Unit</label>
-                <select required name="units_id" class="form-control-sm input-border-bottom form-control" id="units_id">
+                <select required name="units_id" class="form-control-sm  form-control input-border-bottom-custom" id="units_id">
                   <option value="*">*</option>
                 </select>
               </div>
@@ -77,7 +77,7 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="qtyPerUnit" class="placeholder">Qty/Unit</label>
-                <input id="qtyPerUnit" name="qtyPerUnit" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="qtyPerUnit" placeholder="Qty / Unit" name="qtyPerUnit" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>
@@ -86,19 +86,19 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="volumePerDays" class="placeholder">Volume/Days</label>
-                <input id="volumePerDays" name="volumePerDays" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="volumePerDays" placeholder="Volume/Days" name="volumePerDays" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="qtySafety" class="placeholder">Qty Safety</label>
-                <input id="qtySafety" name="qtySafety" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="qtySafety" placeholder="Qty Safety" name="qtySafety" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="safetyForDays" class="placeholder">Day</label>
-                <input id="safetyForDays" name="safetyForDays" type="number" class="form-control form-control-sm input-border-bottom" required>
+                <input id="safetyForDays" placeholder="Safety For Days" name="safetyForDays" type="number" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>
@@ -107,13 +107,13 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="forecast" class="placeholder">Forecast</label>
-                <input id="forecast" name="forecast" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="forecast" placeholder="Forecast" name="forecast" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="remarks" class="placeholder">Remarks</label>
-                <input id="remarks" name="remarks" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="remarks" placeholder="Remarks" name="remarks" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>

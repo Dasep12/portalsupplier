@@ -215,7 +215,7 @@
     }
 
     function showButton(userId, id) {
-        var dataContent = "<div>";
+        var dataContent = "<div class='row d-flex justify-content-center'>";
         <?php if (CrudMenuPermission($MenuUrl, $user_id, 'edit')) { ?>
             dataContent += "<a id='btn-update-" + userId + "' class='btn btn-sm btn-link text-success ml-2 btn-option' ><small><span class='fas fa-edit'></span> Edit</small></a>";
         <?php } else { ?>

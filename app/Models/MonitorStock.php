@@ -38,6 +38,8 @@ class MonitorStock extends Model
             $query->where('a.part_name', 'like', '%' . $req->search . '%');
         }
 
+
+
         $count = $query->count();
 
         $data = $query->skip(($page - 1) * $limit)

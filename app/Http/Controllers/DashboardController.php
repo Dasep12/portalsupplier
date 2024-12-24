@@ -15,7 +15,7 @@ class DashboardController extends Controller
     //
     public function index()
     {
-        return view("dashboard.index_v2");
+        return view("dashboard.index_v3");
     }
 
     public function jsonAllPart()

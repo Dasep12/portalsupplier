@@ -15,7 +15,7 @@
             <form action="{{ url('uploadFilesSupplier') }}" enctype="multipart/form-data" method="post" id="CrudSupplierUploadFormUpload">
               @csrf
               <div class="row">
-                <div class="col-lg-3">
+                <div class="lg-3 ml-1">
                   <div class="form-group form-group-sm">
                     <label for="">File Upload</label>
                     <div id="btn-upload" style="position: relative;overflow: hidden;cursor:pointer" class="btn btn-dark btn-sm btn-block">
@@ -39,12 +39,12 @@
         <form action="#" enctype="multipart/form-data" method="post" id="CrudSupplierUploadFormUpload2">
           @csrf
           <div class="row">
-            <div class="col md-12">
-              <div class="table-responsive">
-                <table id="JqGridTempUpload"></table>
-                <div id="jqGridPager2"></div>
-                <a href="" class="mt-2 mb-3 btn btn-primary btn-success-custom"><i class="fa fa-file-excel"></i> Download Template</a>
-              </div>
+            <div class="col-md-12">
+              <!-- <div class="table-responsive"> -->
+              <table id="JqGridTempUpload"></table>
+              <div id="jqGridPager2"></div>
+              <a href="{{ asset('document/format_upload_supplier.xlsx') }}" class="mt-2 mb-3 btn btn-primary btn-success-custom"><i class="fa fa-file-excel"></i> Download Template</a>
+              <!-- </div> -->
             </div>
           </div>
           <div class="row mt-1" id="ErrorInfoUpload"></div>
@@ -92,14 +92,15 @@
     rownumWidth: 30,
     autoresizeOnLoad: true,
     gridview: true,
-    width: '100%',
+    width: 900,
     rowNum: 20,
     shrinkToFit: true,
     rowList: [10, 20],
     pager: "#jqGridPager2",
     loadComplete: function(data) {
-      var modalWidth = $('.table-responsive').width(); // Get the modal width
-      $("#JqGridTempUpload").setGridWidth(modalWidth * 1.09); // Set jqGrid width (95% of modal width)
+      $('#CrudSupplierUploadModalUpload').on('shown.bs.modal', function() {
+        $("#JqGridTempUpload").setGridWidth($(this).find(".modal-body").width()); // Adjust grid width
+      });
     },
   });
 
@@ -212,6 +213,7 @@
 
     e.preventDefault();
     var allData = $("#JqGridTempUpload").jqGrid('getRowData');
+    let jsonString = JSON.stringify(allData);
     if (allData.length > 0) {
       $.ajax({
         url: "{{ url('jsonCrudSupplier') }}",
@@ -220,7 +222,7 @@
         data: {
           "_token": "{{ csrf_token() }}",
           "CrudActionSupplier": $("#CrudActionSupplierUpload").val(),
-          allData: allData,
+          allData: jsonString,
         },
         success: function(response) {
           if (response.success) {

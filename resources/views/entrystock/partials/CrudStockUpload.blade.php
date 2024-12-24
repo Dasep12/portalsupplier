@@ -15,7 +15,7 @@
             <form action="{{ url('uploadFiles') }}" enctype="multipart/form-data" method="post" id="CrudEntryStockFormUpload">
               @csrf
               <div class="row">
-                <div class="col-lg-4">
+                <div class="ml-1">
                   <div class="form-group form-group-sm">
                     <label for="">Supplier Name</label>
                     <select id="suppliers_id" name="suppliers_id" style="font-size: 0.85rem !important;" class="form-control form-control-sm custom-select select2">
@@ -23,7 +23,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="">
                   <div class="form-group form-group-sm">
                     <label for="">File Upload</label>
                     <div id="btn-upload" style="position: relative;overflow: hidden;cursor:pointer" class="btn btn-dark btn-sm btn-block">
@@ -48,12 +48,10 @@
         <form action="#" enctype="multipart/form-data" method="post" id="CrudEntryStockForm2">
           @csrf
           <div class="row">
-            <div class="col md-12">
-              <div class="table-responsive">
-                <table id="JqGridTempUpload"></table>
-                <div id="jqGridPager2"></div>
-                <a onclick="DownloadFormat()" class="mt-2 mb-4 btn btn-primary btn-success-custom text-white"><i class="fa fa-file-excel"></i> Download Template</a>
-              </div>
+            <div class="col-md-12">
+              <table id="JqGridTempUpload"></table>
+              <div id="jqGridPager2"></div>
+              <a onclick="DownloadFormat()" class="mt-2 mb-4 btn btn-primary btn-success-custom text-white"><i class="fa fa-file-excel"></i> Download Template</a>
             </div>
           </div>
           <div class="row mt-1" id="ErrorInfoUpload"></div>
@@ -108,8 +106,9 @@
     rowList: [10, 20],
     pager: "#jqGridPager2",
     loadComplete: function(data) {
-      var modalWidth = $('.table-responsive').width(); // Get the modal width
-      $("#JqGridTempUpload").setGridWidth(modalWidth * 1.09); // Set jqGrid width (95% of modal width)
+      $('#CrudEntryStockModalUpload').on('shown.bs.modal', function() {
+        $("#JqGridTempUpload").setGridWidth($(this).find(".modal-body").width()); // Adjust grid width
+      });
     },
   });
 
@@ -222,6 +221,7 @@
     ignore: ":hidden",
     submitHandler: function(form) {
       var allData = $("#JqGridTempUpload").jqGrid('getRowData');
+      let jsonString = JSON.stringify(allData);
       $.ajax({
         url: "{{ url('jsonImportStock') }}",
         method: 'POST',
@@ -229,7 +229,7 @@
         data: {
           "_token": "{{ csrf_token() }}",
           supplier_id: $("#suppliers_id").val(),
-          allData: allData,
+          allData: jsonString,
         },
         success: function(response) {
           if (response.success) {

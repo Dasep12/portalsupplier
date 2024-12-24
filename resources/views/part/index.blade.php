@@ -268,7 +268,6 @@
         rowNum: 20,
         autowidth: true,
         loadonce: false,
-        rowNum: 20,
         pager: "#jqGridPager",
         multiselect: true,
         rowList: [15, 30, 50],
@@ -383,7 +382,7 @@
     }
 
     function showButton(RowId, id) {
-        var dataContent = "<div>";
+        var dataContent = "<div class='d-flex row justify-content-center'>";
         <?php if (CrudMenuPermission($MenuUrl, $user_id, 'edit')) { ?>
             dataContent += "<a id='btn-update-" + RowId + "' class='btn btn-sm btn-link text-success ml-2 btn-option' ><small><span class='fas fa-edit'></span> Edit</small></a>";
         <?php } else { ?>

@@ -15,19 +15,19 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="supplier_id" class="placeholder">Supplier Id</label>
-                <input id="supplier_id" name="supplier_id" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="supplier_id" placeholder="Supplier Id / Supplier Code" name="supplier_id" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="supplier_name" class="placeholder">Supplier Name</label>
-                <input id="supplier_name" name="supplier_name" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="supplier_name" placeholder="Supplier Name" name="supplier_name" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="email" class="placeholder">Email</label>
-                <input id="email" name="email" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="email" placeholder="Email" name="email" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>
@@ -36,13 +36,13 @@
             <div class="col md-3">
               <div class="form-group ">
                 <label for="phone" class="placeholder">Phone</label>
-                <input id="phone" name="phone" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="phone" placeholder="Phone Number" name="phone" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
                 <label for="address" class="placeholder">Address</label>
-                <input id="address" name="address" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <input id="address" placeholder="Address" name="address" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>

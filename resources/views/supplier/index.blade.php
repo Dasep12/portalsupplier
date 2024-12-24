@@ -5,6 +5,10 @@
 <?php
 $url = request()->segment(1);
 ?>
+
+<style>
+  
+</style>
 <div class="main-panel">
     <div class="content">
         <div class="page-inner">
@@ -20,7 +24,7 @@ $url = request()->segment(1);
                     <div class="row mb-1">
                         <div class="col-md-8">
                             @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
-                            <button type="button" onclick="CrudSupplier('add','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
+                            <button type="button" onclick="CrudSupplier('create','*')" class="btn btn-primary btn-custom-primary"><i class="fa fa-plus"></i> Add New</button>
                             @endif
                             <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
                             @if(CrudMenuPermission($MenuUrl, $user_id, 'add'))
@@ -221,14 +225,14 @@ $url = request()->segment(1);
     }
 
     function showButton(supplierId, id) {
-        var dataContent = "<div>";
+        var dataContent = "<div class='row d-flex justify-content-center p-0'>";
         <?php if (CrudMenuPermission($MenuUrl, $user_id, 'edit')) { ?>
-            dataContent += "<a id='btn-update-" + supplierId + "' class='btn btn-sm btn-link text-success ml-2 btn-option' ><small><span class='fas fa-edit'></span> Edit</small></a>";
+            dataContent += "<div><a id='btn-update-" + supplierId + "' class='btn btn-sm btn-link text-success btn-option p-0' ><small><span class='fas fa-edit'></span> Edit</small></a></div>";
         <?php } else { ?>
             dataContent += "-";
         <?php } ?>
         <?php if (CrudMenuPermission($MenuUrl, $user_id, 'delete')) { ?>
-            dataContent += "<a  id='btn-delete-" + supplierId + "' class='btn btn-sm btn-link text-danger ml-2 btn-option ' ><small><span class='fas fa-trash'></span> Delete</small></a>";
+            dataContent += "<div class='form-inline'><a id='btn-delete-" + supplierId + "' class='btn btn-sm btn-link text-danger btn-option ml-2'><small><span class='fas fa-trash'></span> Delete</small></a></div>";
         <?php } else { ?>
             dataContent += "-";
         <?php } ?>

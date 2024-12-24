@@ -14,14 +14,14 @@
           <div class="row">
             <div class="col md-3">
               <div class="form-group ">
-                <label for="name_category" class="placeholder">Name Category</label>
-                <input id="name_category" name="name_category" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <label for="name_category" class="form-check-label">Name Category</label>
+                <input id="name_category" placeholder="Name Category" name="name_category" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
             <div class="col md-3">
               <div class="form-group ">
-                <label for="remarks" class="placeholder">Remarks</label>
-                <input id="remarks" name="remarks" type="text" class="form-control form-control-sm input-border-bottom" required>
+                <label for="remarks" class="form-check-label">Remarks</label>
+                <input id="remarks" placeholder="Remarks" name="remarks" type="text" class="form-control form-control-sm input-border-bottom input-border-bottom-custom" required>
               </div>
             </div>
           </div>
@@ -29,7 +29,7 @@
             <div class="col md-3">
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" name="status_category" id="status_category" type="checkbox">
+                  <input class="form-check-input input-border-bottom-custom" name="status_category" id="status_category" type="checkbox">
                   <span class="form-check-sign">Status</span>
                 </label>
               </div>

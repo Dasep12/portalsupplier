@@ -224,7 +224,7 @@ class PartController extends Controller
 
     public function uploadPart(Request $req)
     {
-        $sendData = $req->allData;
+        $sendData = json_decode($req->allData, true);
         $data = [];
         foreach ($sendData as $s) {
 
