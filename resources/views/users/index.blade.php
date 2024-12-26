@@ -161,6 +161,11 @@
             hidden: true
             // width: 80,
         }, {
+            label: 'password',
+            name: 'password',
+            hidden: true,
+            // width: 75
+        }, {
             label: 'Status',
             name: 'act',
             align: 'center',
@@ -359,13 +364,18 @@
             phone = Grid.jqGrid('getCell', id, 'phone'),
             supplier_id = Grid.jqGrid('getCell', id, 'supplier_id'),
             role_id = Grid.jqGrid('getCell', id, 'role_id'),
+            password = Grid.jqGrid('getCell', id, 'password'),
             lock_user = Grid.jqGrid('getCell', id, 'lock_user');
 
         $("#id").val(id)
         $("#username").val(username)
         $("#email").val(email)
         $("#phone").val(phone)
-
+        $.get(`{{ url("decryptPassword") }}?password=${password}`,
+            function(data, txtStatus, jqXHR) {
+                $("#password").val(data);
+            }
+        );
         setTimeout(() => {
             $("#role_id").val(role_id).trigger('change');
         }, 500);

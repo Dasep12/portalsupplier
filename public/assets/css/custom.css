@@ -128,15 +128,18 @@
 }
 
 .navbar-header[data-background-color="red2"] {
-  background: #860000 !important;
+  /* background: #860000 !important; */
+  background: #0c2255  !important;
 }
 
 .logo-header[data-background-color="red2"]{
-  background: #860000 !important;
+  /* background: #860000 !important; */
+  background: #0c2255  !important;
 }
 
 .sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a{
-  background: #860000 !important;
+  /* background: #860000 !important; */
+  background: #0c2255  !important;
 }
 
 .modal-xlModal{
@@ -286,18 +289,5 @@
 
 }
 
-.sidebar.sidebar-style-2 .nav .nav-item a:focus, .sidebar.sidebar-style-2 .nav .nav-item a:hover, .sidebar.sidebar-style-2 .nav .nav-item a[data-toggle="collapse"][aria-expanded="true"] {
-  background: rgb(154, 32, 32)  !important;
-}
 
-.sidebar .nav-collapse li a:hover .sub-item, .sidebar[data-background-color="white"] .nav-collapse li a:hover .sub-item {
-  color: white !important;
-}
 
-style-2 .nav .nav-item a[data-toggle="collapse"][aria-expanded="true"] i, .sidebar.sidebar-style-2 .nav .nav-item a[data-toggle="collapse"][aria-expanded="true"] p {
-  color: #fafafa !important;
-}
-
-.sidebar.sidebar-style-2 .nav .nav-item a:focus i, .sidebar.sidebar-style-2 .nav .nav-item a:focus p, .sidebar.sidebar-style-2 .nav .nav-item a:hover i, .sidebar.sidebar-style-2 .nav .nav-item a:hover p, .sidebar.sidebar-style-2 .nav .nav-item a[data-toggle="collapse"][aria-expanded="true"] i, .sidebar.sidebar-style-2 .nav .nav-item a[data-toggle="collapse"][aria-expanded="true"] p {
-  color: #fafafa !important;
-}

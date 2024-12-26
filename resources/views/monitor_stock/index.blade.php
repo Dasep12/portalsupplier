@@ -33,26 +33,20 @@
                                 <table id="jqGrid"></table>
                                 <div id="jqGridPager"></div>
                             </div>
-                            <div class="row mb-1">
-                                <div class="form-group ml-1">
+                            <div class="row mt-2">
+                                <div class="col-md-5 d-flex justify-content-center ">
                                     <button onclick="reloadGridList()" class="btn btn-primary btn-custom-primary"><i class="fa fa-sync-alt"></i> Reload</button>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group ml-1">
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" readonly value="Export Data" class="form-control field-export" aria-label="Text input with dropdown button">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
-                                                <div class="dropdown-menu">
-                                                    <a onclick="exportToExcel()" class="dropdown-item" href="#"><i class="fa fa-file-excel"></i> Excel</a>
-                                                    <a class="dropdown-item" href="#"><i class="fa fa-file-pdf"></i> Pdf</a>
-                                                </div>
+                                    <div class="ml-2 input-group input-group-sm">
+                                        <input type="text" readonly value="Export Data" class="form-control field-export" aria-label="Text input with dropdown button">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary btn-custom-primary  dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Format</button>
+                                            <div class="dropdown-menu">
+                                                <a style="cursor:pointer" onclick="exportToExcel('xls')" class="dropdown-item"><i class="fa fa-file-excel"></i> Excel</a>
+                                                <a style="cursor:pointer" onclick="exportToExcel('pdf')" class="dropdown-item"><i class="fa fa-file-pdf"></i> Pdf</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -220,5 +214,45 @@
             titleText: 'Qty Stock Supplier'
         }]
     });
+
+    function exportToExcel(type) {
+        $.ajax({
+            url: "{{ url('exportMonitorStock') }}",
+            method: "GET",
+            data: {
+                act: type
+            },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function(data, status, xhr) {
+
+                if (type == "xls") {
+                    // Create a URL for the Blob object and initiate download
+                    var blob = new Blob([data], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "Monitor stock.xlsx";
+                    link.click();
+                } else if (type == "pdf") {
+                    var blob = new Blob([data], {
+                        type: 'application/pdf'
+                    });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "Monitor stock.pdf";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error exporting file:', error);
+            }
+        })
+    }
 </script>
 @endsection

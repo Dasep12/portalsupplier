@@ -18,7 +18,7 @@ body {
 
 .logo {
   width: 150px;
-  height: 50px;
+  height: 55px;
   margin-top: 20px;
   margin-left: 35px;
 }
@@ -131,7 +131,8 @@ a {
 }
 
 .btn-blue {
-  background-color: #860000;
+  /* background-color: #860000; */
+  background-color: #0c2255;
   width: 150px;
   color: #fff;
   border-radius: 2px;
@@ -150,7 +151,8 @@ a {
 
 .bg-blue {
   color: #fff;
-  background-color: #860000;
+  background-color: #0c2255;
+  /* background-color: #860000; */
 }
 
 @media screen and (max-width: 991px) {

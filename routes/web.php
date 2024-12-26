@@ -83,6 +83,7 @@ Route::middleware(['check.session', 'check.menuAccess'])->group(function () {
     // MONITOR STOCK ROUTES
     Route::get('/monitorStock', [MonitorStockController::class, 'index']);
     Route::get('/jsonMonitorList', [MonitorStockController::class, 'jsonMonitorList']);
+    Route::get('/exportMonitorStock', [MonitorStockController::class, 'exportMonitorStock']);
 
 
     // ROLES ROUTES
@@ -95,6 +96,7 @@ Route::middleware(['check.session', 'check.menuAccess'])->group(function () {
     // USERS ROUTES 
     Route::get('/users', [UsersController::class, 'index']);
     Route::get('/jsonUsers', [UsersController::class, 'jsonUsers']);
+    Route::get('/decryptPassword', [UsersController::class, 'decryptPassword']);
     Route::post('/jsonCrudUser', [UsersController::class, 'jsonCrudUser']);
     Route::get('/jsonListRoles', [UsersController::class, 'jsonListRoles']);
     Route::get('/jsonDetailListUserMenu', [UsersController::class, 'jsonDetailListUserMenu']);

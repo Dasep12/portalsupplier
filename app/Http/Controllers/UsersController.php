@@ -20,7 +20,6 @@ class UsersController extends Controller
      */
     public function index()
     {
-
         return view('users.index');
     }
 
@@ -36,6 +35,13 @@ class UsersController extends Controller
         return response()->json($data);
     }
 
+    public function decryptPassword(Request $req)
+    {
+        $decrypt = DecryptPassword($req->password);
+        echo $decrypt;
+        // echo $req->password;
+    }
+
     public function jsonDetailListUserMenu(Request $req)
     {
         $response = Users::jsonDetailListUserMenu($req);
@@ -48,7 +54,7 @@ class UsersController extends Controller
         $useraccess = json_decode($req->UserAccess, true);
         $data = [
             "username"       => $req->username,
-            "password"       => $req->password,
+            "password"       => EncryptPassword($req->password),
             "email"          => $req->email,
             "phone"          => $req->phone,
             "supplier_id"    => $req->supplier_id,
@@ -81,6 +87,7 @@ class UsersController extends Controller
                 $roles = Users::find($req->id);
                 $roles->username = $req->username;
                 $roles->email = $req->email;
+                $roles->password = EncryptPassword($req->password);
                 $roles->phone = $req->phone;
                 $roles->supplier_id = $req->supplier_id;
                 $roles->role_id = $req->role_id;

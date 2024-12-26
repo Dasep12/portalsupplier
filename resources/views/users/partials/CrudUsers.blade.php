@@ -33,9 +33,9 @@
                             <div class="form-group">
                                 <label for="password">Password * :</label>
                                 <div class="input-group mb-3">
-                                    <input type="password" name="password" class="form-control form-control-sm input-border-bottom" placeholder="" aria-label="" aria-describedby="basic-addon2">
-                                    <div style="cursor:pointer" class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-eye"></i></span>
+                                    <input type="password" id="password" name="password" class="form-control form-control-sm input-border-bottom" placeholder="" aria-label="" aria-describedby="basic-addon2">
+                                    <div style="cursor:pointer" class="input-group-append" onclick="passwordVisibility()">
+                                        <span class="input-group-text iconShow" id="basic-addon2 "><i class="fa fa-eye"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -49,14 +49,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="role_id">Role * :</label>
-                                <select name="role_id" class="form-control-sm input-border-bottom form-control" id="role_id">
+                                <select name="role_id" class="form-control-sm input-border-bottom-custom form-control" id="role_id">
                                     <option value="*">*</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="supplier_id">Supplier * :</label>
-                                <select name="supplier_id" class="form-control-sm input-border-bottom form-control" id="supplier_id">
+                                <select name="supplier_id" class="form-control-sm input-border-bottom-custom form-control" id="supplier_id">
                                     <option value="*">All Supplier</option>
                                 </select>
                             </div>
@@ -186,7 +186,6 @@
             });
         },
         rowattr: function(item) {
-            console.log(item.MenuLevel)
             if ($("#CrudUserAction").val() == "delete") {
                 return {
                     "class": "ui-state-disabled ui-jqgrid-disablePointerEvents"
@@ -200,6 +199,7 @@
             return true; // allow select the row
         }
     });
+
 
     function setGridData(rowid, colname) {
         $("#UserAccess").val(getGridData());
@@ -271,5 +271,16 @@
             return ``;
         }
         return `<input type='checkbox' id='${idrow}_${colname}' ${checked} value='${cellvalue}' onchange="setGridData('${idrow}','${colname}')" ${isdisabled} />`
+    }
+
+    function passwordVisibility() {
+        var x = document.getElementById("password");
+        if (x.type === "password") {
+            x.type = "text";
+            $('.iconShow').html("<i class='far fa-eye-slash'></i>");
+        } else {
+            x.type = "password";
+            $('.iconShow').html("<i class='fa fa-eye'></i>");
+        }
     }
 </script>
