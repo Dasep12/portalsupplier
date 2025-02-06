@@ -44,4 +44,13 @@ class DashboardController extends Controller
             ->count();
         return response()->json($resp);
     }
+
+    public function jsonGraphStockPart(Request $req)
+    {
+        $resp = DB::table('vw_monitorstock as a')
+            ->select('a.stockStatus', DB::raw('COUNT(*) as count'))
+            ->groupBy('a.stockStatus')
+            ->get();
+        return response()->json($resp);
+    }
 }

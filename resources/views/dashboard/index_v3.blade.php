@@ -140,7 +140,7 @@
 </div>
 <script src="https://fastly.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
 <script>
-    Highcharts.chart('pieChart', {
+    var graph1 = Highcharts.chart('pieChart', {
         chart: {
             backgroundColor: null,
             type: 'pie',
@@ -155,7 +155,7 @@
                         customLabel = chart.options.chart.custom.label =
                             chart.renderer.label(
                                 'Total<br/>' +
-                                '<strong>213</strong>'
+                                '<strong></strong>'
                             )
                             .css({
                                 color: '#000',
@@ -188,7 +188,7 @@
             text: ''
         },
         subtitle: {
-            text: '<span style="color: black;font-weight:700; font-size: 16px;">Control Stock By Part</span>',
+            text: '<span style="color: black;font-weight:700; font-size: 16px;">Control Stock All Part</span>',
             useHTML: true
         },
         tooltip: {
@@ -242,6 +242,34 @@
         }]
     });
 
+    function pieShortage() {
+        $.ajax({
+            url: "{{ url('jsonGraphStockPart') }}",
+            data: {
+                "_token": "{{ csrf_token() }}"
+            },
+            cache: false,
+            success: function(resp) {
+                console.log(resp)
+                var res = [];
+                for (let i = 0; i < resp.length; i++) {
+                    var colour = resp[i].stockStatus == "SAFETY" ? "green" : (resp[i].stockStatus == "SHORTAGE") ? "red" : "orange"
+                    res.push({
+                        name: resp[i].stockStatus,
+                        y: resp[i].count,
+                        color: colour
+                    })
+                }
+
+                if (graph1 && res.length > 0) {
+                    graph1.series[0].setData(res, true);
+                }
+            }
+        })
+    }
+
+    pieShortage()
+
     // Automatic scrolling function
     function autoScrollTable() {
         var table = document.getElementById('autoScrollTable');
@@ -269,11 +297,11 @@
                 for (let i = 0; i < res.length; i++) {
                     var badge = res[i].stockStatus == "SHORTAGE" ? "badge-danger" : "badge-success";
                     html += `<tr>`
-                    html += `<td>${res[i].supplier_name}</td>`
+                    html += `<td>${res[i].supplier_name.toUpperCase()}</td>`
                     html += `<td>${res[i].part_number}</td>`
-                    html += `<td>${res[i].part_name}</td>`
-                    html += `<td>${res[i].stockSupplier}</td>`
-                    html += `<td><label class="text-white badge ${badge}" for="">${res[i].stockStatus}</label></td>`
+                    html += `<td>${res[i].part_name.toUpperCase()}</td>`
+                    html += `<td>${res[i].stockSupplier.toUpperCase()}</td>`
+                    html += `<td><label class="text-white badge ${badge}" for="">${res[i].stockStatus.toUpperCase()}</label></td>`
                     html += `</tr>`
                 }
                 if (res.length > 5) {

@@ -33,6 +33,7 @@ Route::middleware(['check.session', 'check.menuAccess'])->group(function () {
     Route::get('/jsonAllSupplier', [DashboardController::class, 'jsonAllSupplier']);
     Route::get('/jsonTableStock', [DashboardController::class, 'jsonTableStock']);
     Route::get('/jsonStockPart', [DashboardController::class, 'jsonStockPart']);
+    Route::get('/jsonGraphStockPart', [DashboardController::class, 'jsonGraphStockPart']);
 
 
     // SUPPLIER ROUTES

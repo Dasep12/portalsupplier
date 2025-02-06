@@ -35,6 +35,7 @@
 <script src="{{ asset('assets/js/setting-demo.js') }}"></script>
 
 
+
 <script>
    // Override default pager icons
 
